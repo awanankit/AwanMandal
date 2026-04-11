@@ -13,10 +13,10 @@ pen.width(2)
 colors = ["red", "orange", "yellow", "green", "blue", "purple"]
 
 # Draw flower pattern
-for i in range(120):
+for i in range(120+6):
     pen.pencolor(colors[i % 6])
-    pen.circle(100)
-    pen.left(3)
+    pen.circle(1000)
+    pen.left(30)
 
 # Hide turtle
 pen.hideturtle()
