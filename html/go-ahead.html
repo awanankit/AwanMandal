@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intellect Search - Discover Brilliant Minds</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6B9D;
+            --accent: #00D9FF;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 157, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 217, 255, 0.1) 0%, transparent 40%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-5%, -5%) rotate(5deg); }
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(108, 99, 255, 0.3);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 107, 157, 0.3);
+            bottom: 20%;
+            right: 10%;
+            animation-delay: -3s;
+        }
+
+        .orb-3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(0, 217, 255, 0.25);
+            top: 50%;
+            left: 60%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover {
+            background: var(--glass);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            padding: 0.7rem 1.8rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--light);
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Search Container */
+        .search-container {
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 50px;
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 40px rgba(108, 99, 255, 0.3);
+        }
+
+        .search-icon {
+            padding-left: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 1rem;
+            font-size: 1.1rem;
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(108, 99, 255, 0.5);
+        }
+
+        /* Search Results */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            margin-top: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-results.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .result-item:hover {
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        .result-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .result-info h4 {
+            color: var(--light);
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .result-info p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        /* Quick Tags */
+        .quick-tags {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .tag {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Games Plan Button */
+        .games-plan-section {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+        }
+
+        .games-plan-btn {
+            background: linear-gradient(135deg, #ff6b9d, #ffc107, #00d9ff);
+            background-size: 200% 200%;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: gradientMove 3s ease infinite;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+            box-shadow: 0 10px 40px rgba(255, 107, 157, 0.4);
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .games-plan-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 20px 60px rgba(255, 107, 157, 0.6);
+        }
+
+        /* Login Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 3rem;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: modalSlide 0.4s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--light);
+        }
+
+        .modal h2 {
+            color: var(--light);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .modal-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-submit {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 15px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .modal-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
+        }
+
+        .modal-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .modal-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .search-wrapper {
+                flex-direction: column;
+                border-radius: 20px;
+            }
+            
+            .search-btn {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <i class="fas fa-brain"></i> IntellectHub
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="#discover"><i class="fas fa-search"></i> Discover</a></li>
+            <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+        <button class="login-btn" onclick="openLoginModal()">
+            <i class="fas fa-user-circle"></i> Login
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="hero-title">Discover <span>Brilliant Minds</span></h1>
+        <p class="hero-subtitle">Search and explore information about the world's most intelligent and influential people</p>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search for intelligent people..." id="searchInput" oninput="searchPeople()">
+                <button class="search-btn" onclick="performSearch()">
+                    <i class="fas fa-arrow-right"></i> Search
+                </button>
+            </div>
+            
+            <!-- Search Results -->
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <!-- Quick Tags -->
+        <div class="quick-tags">
+            <span class="tag" onclick="searchTag('Einstein')">Albert Einstein</span>
+            <span class="tag" onclick="searchTag('Tesla')">Nikola Tesla</span>
+            <span class="tag" onclick="searchTag('Curie')">Marie Curie</span>
+            <span class="tag" onclick="searchTag('Hawking')">Stephen Hawking</span>
+            <span class="tag" onclick="searchTag('Da Vinci')">Leonardo da Vinci</span>
+            <span class="tag" onclick="searchTag('Newton')">Isaac Newton</span>
+        </div>
+    </div>
+
+    <!-- Games Plan Button -->
+    <div class="games-plan-section">
+        <a href="game.html" class="games-plan-btn">
+            <i class="fas fa-gamepad"></i> Games Plan
+        </a>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeLoginModal()">times;</button>
+            <h2><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="email" class="modal-input" placeholder="Email Address" required>
+                <input type="password" class="modal-input" placeholder="Password" required>
+                <button type="submit" class="modal-submit">Login</button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Intelligent People Database
+        const peopleDatabase = [
+            { name: "Albert Einstein", field: "Physics", info: "Theory of Relativity, Nobel Prize in Physics", initials: "AE" },
+            { name: "Nikola Tesla", field: "Engineering", info: "Alternating Current, Tesla Coil", initials: "NT" },
+            { name: "Marie Curie", field: "Chemistry", info: "Radioactivity research, 2 Nobel Prizes", initials: "MC" },
+            { name: "Leonardo da Vinci", field: "Art & Science", info: "Mona Lisa, Flying Machine designs", initials: "LD" },
+            { name: "Isaac Newton", field: "Physics", info: "Laws of Motion, Gravitation theory", initials: "IN" },
+            { name: "Stephen Hawking", field: "Physics", info: "Black Hole theory, Cosmology", initials: "SH" },
+            { name: "Ada Lovelace", field: "Computer Science", info: "First Computer Programmer", initials: "AL" },
+            { name: "Alan Turing", field: "Computer Science", info: "Father of Computer Science", initials: "AT" },
+            { name: "Galileo Galilei", field: "Astronomy", info: "Heliocentric model, Telescope", initials: "GG" },
+            { name: "Aristotle", field: "Philosophy", info: "Logic, Ethics, Metaphysics", initials: "AR" },
+            { name: "Socrates", field: "Philosophy", info: "Western Philosophy foundation", initials: "SO" },
+            { name: "Plato", field: "Philosophy", info: "Theory of Forms, Republic", initials: "PL" },
+            { name: "Bill Gates", field: "Technology", info: "Microsoft Founder, Philanthropist", initials: "BG" },
+            { name: "Steve Jobs", field: "Technology", info: "Apple Founder, Innovator", initials: "SJ" },
+            { name: "Elon Musk", field: "Technology", info: "SpaceX, Tesla, Innovation", initials: "EM" }
+        ];
+
+        // Search Function
+        function searchPeople() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (query.length < 2) {
+                resultsContainer.classList.remove('active');
+                return;
+            }
+
+            const filtered = peopleDatabase.filter(person => 
+                person.name.toLowerCase().includes(query) || 
+                person.field.toLowerCase().includes(query)
+            );
+
+            if (filtered.length > 0) {
+                resultsContainer.innerHTML = filtered.map(person => `
+                    <div class="result-item" onclick="showPersonInfo('${person.name}')">
+                        <div class="result-avatar">${person.initials}</div>
+                        <div class="result-info">
+                            <h4>${person.name}</h4>
+                            <p>${person.field} • ${person.info}</p>
+                        </div>
+                    </div>
+                `).join('');
+                resultsContainer.classList.add('active');
+            } else {
+                resultsContainer.innerHTML = `
+                    <div class="result-item">
+                        <div class="result-info">
+                            <h4>No results found</h4>
+                            <p>Try searching for another intelligent person</p>
+                        </div>
+                    </div>
+                `;
+                resultsContainer.classList.add('active');
+            }
+        }
+
+        // Perform Search
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query) {
+                searchPeople();
+            }
+        }
+
+        // Search by Tag
+        function searchTag(name) {
+            document.getElementById('searchInput').value = name;
+            searchPeople();
+        }
+
+        // Show Person Info
+        function showPersonInfo(name) {
+            const person = peopleDatabase.find(p => p.name === name);
+            if (person) {
+                alert(`📚 ${person.name}\n\nField: ${person.field}\nAchievements: ${person.info}\n\nWelcome to IntellectHub - Where brilliance meets discovery!`);
+            }
+            document.getElementById('searchResults').classList.remove('active');
+        }
+
+        // Login Modal Functions
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        // Handle Login
+        function handleLogin(event) {
+            event.preventDefault();
+            alert('🎉 Welcome to IntellectHub! Login successful!');
+            closeLoginModal();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLoginModal();
+            }
+        });
+
+        // Close results when clicking outside
+        document.addEventListener('click', function(e) {
+            const searchContainer = document.querySelector('.search-container');
+            const searchResults = document.getElementById('searchResults');
+            if (!searchContainer.contains(e.target)) {
+                searchResults.classList.remove('active');
+            }
+        });
+
+        // Enter key search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>
+<!-- Life Story Display -->
+<div class="life-story-container" id="lifeStoryContainer">
+    <div class="life-story-card" id="lifeStoryCard">
+    <button class="story-close" onclick="closeStory()">&times;</button>
+    <div class="story-header">
+        <div class="story-avatar" id="storyAvatar"></div>
+        <div class="story-title-section">
+        <h2 id="storyName"></h2>
+        <span class="story-field" id="storyField"></span>
+        </div>
+    </div>
+    <div class="story-content">
+        <h3><i class="fas fa-book-open"></i> Biography</h3>
+        <p id="storyBiography"></p>
+    </div>
+    <div class="story-achievements">
+        <h3><i class="fas fa-trophy"></i> Key Achievements</h3>
+        <p id="storyAchievements"></p>
+    </div>
+    <div class="story-quote">
+        <i class="fas fa-quote-left"></i>
+        <span id="storyQuote"></span>
+    </div>
+    </div>
+</div>
+    </div>
+
+    <style>
+/* Life Story Styles */
+.life-story-container {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 2rem;
+    display: none;
+    animation: fadeInUp 0.5s ease;
+}
+
+.life-story-container.active {
+    display: block;
+}
+
+.life-story-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.story-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.story-close:hover {
+    background: var(--secondary);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.story-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.story-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
+}
+
+.story-title-section h2 {
+    color: var(--light);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+}
+
+.story-field {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    padding: 0.3rem 1rem;
+    border-radius: 15px;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.story-content, .story-achievements {
+    margin-bottom: 1.5rem;
+}
+
+.story-content h3, .story-achievements h3 {
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.story-content p, .story-achievements p {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.story-quote {
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(255, 107, 157, 0.2));
+    padding: 1.5rem;
+    border-radius: 15px;
+    border-left: 4px solid var(--secondary);
+}
+
+.story-quote i {
+    color: var(--secondary);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.story-quote span {
+    color: var(--light);
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+    </style>
+    // Navigation Functions
+    function navigateToAbout() {
+        window.location.href = 'about.html';
+    }
+
+    function navigateToContact() {
+        window.location.href = 'contact.html';
+    }
+
+    function navigateToDiscover() {
+        window.location.href = 'discover.html';
+    }
+
+    function navigateToHome() {
+        window.location.href = 'index.html';
+    }
+
+    // Update nav links to use these functions
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.endsWith('.html')) {
+            e.preventDefault();
+            window.location.href = href;
+        }
+        });
+    });
+
+    // Keyboard navigation shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.altKey && e.key === '1') {
+        navigateToHome();
+        } else if (e.altKey && e.key === '2') {
+        navigateToAbout();
+        } else if (e.altKey && e.key === '3') {
+        navigateToDiscover();
+        } else if (e.altKey && e.key === '4') {
+        navigateToContact();
+        }
+        });
+        </script>
+    </body>
+    </html>
+        navigateToDiscover();
+        } else if (e.altKey && e.key === '4') {
+        navigateToContact();
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outdoor Games - Fun & Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 1rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Game Card */
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .game-card:hover .game-image {
+            transform: scale(1.1);
+        }
+
+        .image-container {
+            overflow: hidden;
+            height: 220px;
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-info h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-info p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .click-hint {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #2c3e50;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            color: #ff6b6b;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 25px 25px 0 0;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-body h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body .description {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .pros, .cons {
+            padding: 1.5rem;
+            border-radius: 15px;
+        }
+
+        .pros {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .cons {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        }
+
+        .pros h4, .cons h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pros h4 { color: #155724; }
+        .cons h4 { color: #721c24; }
+
+        .pros ul, .cons ul {
+            list-style: none;
+        }
+
+        .pros li, .cons li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .cons li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .pros-cons { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>🏃 Outdoor Games</h1>
+        <p>Discover the joy of playing in the fresh air!</p>
+    </section>
+
+    <!-- Games Section -->
+    <div class="container">
+        <h2 class="section-title">Popular Outdoor Games</h2>
+        
+        <div class="games-grid">
+            <!-- Football -->
+            <div class="game-card" onclick="openModal('football')">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600" alt="Football" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3>⚽ Football</h3>
+                    <p>The world's most popular sport played on a grass field with two teams competing to score goals.</p>
+                    <span class="click-hint">Click for details →</span>
+                </div>
+            </div>
+
+            <!-- Basketball -->
+            <div class="game-card" onclick="openModal('basketball')">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600" alt="Basketball" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3>🏀 Basketball</h3>
+                    <p>A fast-paced team sport played on a rectangular court where players score by shooting the ball through a hoop.</p>
+                    <span class="click-hint">Click for details →</span>
+                </div>
+            </div>
+
+            <!-- Tennis -->
+            <div class="game-card" onclick="openModal('tennis')">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=600" alt="Tennis" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3>🎾 Tennis</h3>
+                    <p>An elegant racket sport played individually or in doubles, known for its grace and strategic gameplay.</p>
+                    <span class="click-hint">Click for details →</span>
+                </div>
+            </div>
+
+            <!-- Cricket -->
+            <div class="game-card" onclick="openModal('cricket')">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1531415074968-bc2d63cc2058?w=600" alt="Cricket" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3>🏏 Cricket</h3>
+                    <p>A bat-and-ball sport rich in tradition, popular in many countries with Test matches lasting up to 5 days.</p>
+                    <span class="click-hint">Click for details →</span>
+                </div>
+            </div>
+
+            <!-- Swimming -->
+            <div class="game-card" onclick="openModal('swimming')">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?w=600" alt="Swimming" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3>🏊 Swimming</h3>
+                    <p>A refreshing water sport that exercises the entire body while providing a cool escape from the heat.</p>
+                    <span class="click-hint">Click for details →</span>
+                </div>
+            </div>
+
+            <!-- Cycling -->
+            <div class="game-card" onclick="openModal('cycling')">
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600" alt="Cycling" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3>🚴 Cycling</h3>
+                    <p>An eco-friendly outdoor activity that combines exercise with exploration of scenic routes and trails.</p>
+                    <span class="click-hint">Click for details →</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <img src="" alt="" class="modal-image" id="modalImage">
+            <div class="modal-body">
+                <h2 id="modalTitle"></h2>
+                <p class="description" id="modalDesc"></p>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Advantages</h4>
+                        <ul id="prosList"></ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ Disadvantages</h4>
+                        <ul id="consList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>🌿 Get outside and play! Fresh air and sunshine await you!</p>
+    </footer>
+
+    <script>
+        // Game Data
+        const gamesData = {
+            football: {
+                title: '⚽ Football',
+                image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800',
+                description: 'Football, also known as soccer in some countries, is the world\'s most popular sport. It is played between two teams of eleven players each, using a spherical ball. The objective is to score more goals than the opposing team by getting the ball into the opponent\'s goal.',
+                pros: [
+                    'Improves cardiovascular health',
+                    'Builds teamwork and communication skills',
+                    'Enhances coordination and balance',
+                    'Burns calories and helps weight management',
+                    'Can be played almost anywhere'
+                ],
+                cons: [
+                    'Risk of injuries (sprains, fractures)',
+                    'Requires proper equipment (cleats, shin guards)',
+                    'Needs a suitable playing field',
+                    'Weather-dependent activity',
+                    'May cause muscle soreness'
+                ]
+            },
+            basketball: {
+                title: '🏀 Basketball',
+                image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800',
+                description: 'Basketball is a dynamic team sport played on a rectangular court. Players score points by shooting the ball through the opponent\'s hoop. It was invented in 1891 by Dr. James Naismith and has become one of the most popular sports worldwide.',
+                pros: [
+                    'Excellent full-body workout',
+                    'Improves hand-eye coordination',
+                    'Builds muscle strength and endurance',
+                    'Enhances mental toughness',
+                    'Great for social interaction'
+                ],
+                cons: [
+                    'High risk of ankle and knee injuries',
+                    'Requires indoor or outdoor court',
+                    'Needs proper basketball and shoes',
+                    'Can be physically demanding',
+                    'May cause joint stress'
+                ]
+            },
+            tennis: {
+                title: '🎾 Tennis',
+                image: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800',
+                description: 'Tennis is an elegant racket sport that can be played individually (singles) or in pairs (doubles). Players use rackets to hit a ball over a net into the opponent\'s court. It is known for its combination of physical skill and strategic thinking.',
+                pros: [
+                    'Improves cardiovascular fitness',
+                    'Enhances flexibility and agility',
+                    'Good for mental health and focus',
+                    'Can be played at any age',
+                    'Social and competitive options'
+                ],
+                cons: [
+                    'Expensive equipment (rackets, balls)',
+                    'Requires court booking in many cases',
+                    'Tennis elbow risk',
+                    'Weather-sensitive',
+                    'Technical skill takes time to develop'
+                ]
+            },
+            cricket: {
+                title: '🏏 Cricket',
+                image: 'https://images.unsplash.com/photo-1531415074968-bc2d63cc2058?w=800',
+                description: 'Cricket is a bat-and-ball sport played between two teams of eleven players each. It originated in England and is now popular worldwide, especially in South Asia, Australia, and the UK. Matches can last from a few hours to five days.',
+                pros: [
+                    'Builds patience and concentration',
+                    'Improves hand-eye coordination',
+                    'Teamwork and strategy development',
+                    'Various formats for different time constraints',
+                    'Great for physical and mental fitness'
+                ],
+                cons: [
+                    'Some matches can be very long',
+                    'Requires large open spaces',
+                    'Expensive equipment (bat, pads, helmet)',
+                    'Weather-dependent',
+                    'Risk of injuries from ball'
+                ]
+            },
+            swimming: {
+                title: '🏊 Swimming',
+                image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800',
+                description: 'Swimming is a water sport where propulsive movement is used to navigate through water. It is both a recreational activity and a competitive sport. Swimming is one of the best full-body exercises available.',
+                pros: [
+                    'Low-impact exercise, easy on joints',
+                    'Works all major muscle groups',
+                    'Improves lung capacity',
+                    'Reduces stress and anxiety',
+                    'Suitable for all ages'
+                ],
+                cons: [
+                    'Requires access to pool or safe water',
+                    'Risk of drowning if unsupervised',
+                    'Chlorine can irritate skin and eyes',
+                    'Weather can affect outdoor swimming',
+                    'Requires swimming skills'
+                ]
+            },
+            cycling: {
+                title: '🚴 Cycling',
+                image: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=800',
+                description: 'Cycling involves riding a bicycle for transportation, recreation, or sport. It is an eco-friendly activity that provides an excellent cardiovascular workout while allowing you to explore outdoor surroundings.',
+                pros: [
+                    'Excellent cardiovascular exercise',
+                    'Low impact on joints',
+                    'Environmentally friendly transportation',
+                    'Can explore nature and trails',
+                    'Improves balance and coordination'
+                ],
+                cons: [
+                    'Requires bicycle investment',
+                    'Risk of accidents from traffic',
+                    'Weather-dependent',
+                    'May cause saddle discomfort',
+                    'Needs safe cycling paths'
+                ]
+            }
+        };
+
+        // Open Modal
+        function openModal(gameKey) {
+            const game = gamesData[gameKey];
+            const modal = document.getElementById('gameModal');
+            
+            document.getElementById('modalImage').src = game.image;
+            document.getElementById('modalTitle').textContent = game.title;
+            document.getElementById('modalDesc').textContent = game.description;
+            
+            // Populate pros
+            const prosList = document.getElementById('prosList');
+            prosList.innerHTML = game.pros.map(pro => `<li>${pro}</li>`).join('');
+            
+            // Populate cons
+            const consList = document.getElementById('consList');
+            consList.innerHTML = game.cons.map(con => `<li>${con}</li>`).join('');
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Modal
+        function closeModal() {
+            const modal = document.getElementById('gameModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('gameModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra Aura Home Gym - Build Your Perfect Fitness Space</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .hero-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .hero-image {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .hero-text {
+            text-align: center;
+            color: #333;
+        }
+
+        .hero-text h2 {
+            font-size: 2.2em;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .hero-text p {
+            font-size: 1.1em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .instructions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .instruction-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .instruction-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .instruction-box:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .instruction-box:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .instruction-box:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .box-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .box-title {
+            font-size: 1.5em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .box-description {
+            font-size: 0.95em;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .cta-button {
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .hero-section {
+                padding: 25px;
+            }
+
+            .instructions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ Ultra Aura Gym ✨</h1>
+            <p class="subtitle">Build Your Ultimate Home Fitness Space</p>
+        </header>
+
+        <div class="hero-section">
+            <div class="hero-image">
+                <img src="https://via.placeholder.com/600x400?text=Home+Gym+Setup" alt="Home Gym Setup">
+            </div>
+            <div class="hero-text">
+                <h2>Transform Your Home Into a Fitness Paradise</h2>
+                <p>Create the perfect workout environment with our comprehensive guide to building your dream home gym. Whether you're a beginner or an advanced athlete, we'll help you design a space that inspires and motivates you to achieve your fitness goals.</p>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <div class="instruction-box">
+                <div class="box-number">01</div>
+                <div class="box-title">Choose Your Space</div>
+                <div class="box-description">Select a dedicated area with good ventilation, natural light, and enough room for movement. A 150-200 sq ft space is ideal for a complete home gym setup.</div>
+            </div>
+
+            <div class="instruction-box">
+                <div class="box-number">02</div>
+                <div class="box-title">Invest in Essentials</div>
+                <div class="box-description">Start with dumbbells, resistance bands, a yoga mat, and a pull-up bar. These fundamental tools provide endless workout possibilities and save space.</div>
+            </div>
+
+            <div class="instruction-box">
+                <div class="box-number">03</div>
+                <div class="box-title">Add Cardio Equipment</div>
+                <div class="box-description">Include a treadmill, stationary bike, or jump rope to elevate your cardio training. Choose equipment that fits your space and fitness level.</div>
+            </div>
+
+            <div class="instruction-box">
+                <div class="box-number">04</div>
+                <div class="box-title">Create the Atmosphere</div>
+                <div class="box-description">Install proper lighting, add motivational quotes, get a quality sound system, and keep the space clean. The right environment boosts your motivation and performance.</div>
+            </div>
+
+            <div class="instruction-box">
+                <div class="box-number">05</div>
+                <div class="box-title">Safety & Flooring</div>
+                <div class="box-description">Use rubber flooring or gym mats to protect your equipment and joints. Ensure mirrors are securely installed for form correction during workouts.</div>
+            </div>
+
+            <div class="instruction-box">
+                <div class="box-number">06</div>
+                <div class="box-title">Stay Organized</div>
+                <div class="box-description">Use storage racks and shelves to organize your equipment. A tidy gym prevents injuries and makes your workout sessions more efficient and enjoyable.</div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <button class="cta-button">Start Your Journey Today</button>
+        </div>
+
+        <footer>
+            <p> 2024 Ultra Aura Home Gym | Your Fitness, Your Space, Your Rules</p>
+        </footer>
+    </div>
+</body>
+</html>

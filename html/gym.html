@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: magicGradient 20s ease infinite;
+            color: #e0e0e0;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        @keyframes magicGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.5), 0 0 40px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(147, 51, 234, 0.8), 0 0 60px rgba(236, 72, 153, 0.5); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        header {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.8), rgba(59, 130, 246, 0.8));
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 20px 60px rgba(147, 51, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid rgba(236, 72, 153, 0.6);
+            animation: glow 4s ease-in-out infinite;
+            z-index: 10;
+        }
+        header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #ffd700, #ffed4e, #fff9e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            animation: float 3s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+        .plan-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+            background-size: 200% 200%;
+            animation: magicGradient 6s ease infinite;
+            color: white;
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(147, 51, 234, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+        .plan-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.6), 0 0 20px rgba(147, 51, 234, 0.8);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 30px;
+            position: relative;
+            z-index: 5;
+        }
+        .container h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #ec4899, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: float 4s ease-in-out infinite;
+        }
+        .picture-boxes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        .box {
+            width: 320px;
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(59, 130, 246, 0.1));
+            border-radius: 25px;
+            overflow: hidden;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid rgba(236, 72, 153, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: float 5s ease-in-out infinite;
+        }
+        .box:nth-child(1) { animation-delay: 0s; }
+        .box:nth-child(2) { animation-delay: 0.2s; }
+        .box:nth-child(3) { animation-delay: 0.4s; }
+        .box:nth-child(4) { animation-delay: 0.6s; }
+        .box:nth-child(5) { animation-delay: 0.8s; }
+        .box:nth-child(6) { animation-delay: 1s; }
+        .box:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 30px 60px rgba(147, 51, 234, 0.6), 0 0 40px rgba(236, 72, 153, 0.4);
+            border-color: rgba(236, 72, 153, 0.8);
+            animation: glow 3s ease-in-out infinite;
+        }
+        .box img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            filter: brightness(1.1) saturate(1.3);
+        }
+        .box:hover img {
+            transform: scale(1.1) rotate(2deg);
+            filter: brightness(1.3) saturate(1.5);
+        }
+        .box h3 {
+            margin: 20px 0;
+            color: #ffd700;
+            font-size: 1.8em;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+        .box p {
+            padding: 0 20px 25px;
+            color: #b0c4ff;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 30px;
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.8), rgba(59, 130, 246, 0.8));
+            color: white;
+            border-radius: 50px 50px 0 0;
+            box-shadow: 0 -20px 60px rgba(147, 51, 234, 0.4), inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+            border-top: 2px solid rgba(236, 72, 153, 0.6);
+            animation: glow 4s ease-in-out infinite reverse;
+            position: relative;
+            z-index: 10;
+        }
+        .house-button {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6);
+            background-size: 200% 200%;
+            animation: magicGradient 6s ease infinite;
+            color: white;
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            cursor: pointer;
+        }
+        .house-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(6, 182, 212, 0.6), 0 0 20px rgba(59, 130, 246, 0.8);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        h1, h2 {
+            text-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Our Gym</h1>
+        <a href="own.html" class="plan-button">Plan</a>
+    </header>
+    <div class="container">
+        <h2>Explore Our Facilities</h2>
+        <div class="picture-boxes">
+            <div class="box">
+                <img src="https://via.placeholder.com/300x200?text=Weight+Room" alt="Weight Room">
+                <h3>Weight Room</h3>
+                <p>State-of-the-art equipment for strength training.</p>
+            </div>
+            <div class="box">
+                <img src="https://via.placeholder.com/300x200?text=Cardio+Area" alt="Cardio Area">
+                <h3>Cardio Area</h3>
+                <p>Burn calories with our latest cardio machines.</p>
+            </div>
+            <div class="box">
+                <img src="https://via.placeholder.com/300x200?text=Yoga+Studio" alt="Yoga Studio">
+                <h3>Yoga Studio</h3>
+                <p>Relax and rejuvenate in our serene yoga space.</p>
+            </div>
+            <div class="box">
+                <img src="https://via.placeholder.com/300x200?text=Swimming+Pool" alt="Swimming Pool">
+                <h3>Swimming Pool</h3>
+                <p>Enjoy a refreshing swim in our Olympic-sized pool.</p>
+            </div>
+            <div class="box">
+                <img src="https://via.placeholder.com/300x200?text=Sauna" alt="Sauna">
+                <h3>Sauna</h3>
+                <p>Unwind in our luxurious sauna after your workout.</p>
+            </div>
+            <div class="box">
+                <img src="https://via.placeholder.com/300x200?text=Group+Classes" alt="Group Classes">
+                <h3>Group Classes</h3>
+                <p>Join fun and energetic group fitness classes.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <a href="house.html" class="house-button">House Caring</a>
+    </footer>
+</body>
+</html>

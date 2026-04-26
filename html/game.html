@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Zone - Choose Your Fun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            top: -100px;
+            left: -100px;
+            opacity: 0.3;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #feca57, #ff9f43);
+            bottom: -50px;
+            right: -50px;
+            opacity: 0.3;
+            animation-delay: -2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, #5f27cd, #441aff);
+            top: 50%;
+            left: 50%;
+            opacity: 0.2;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4rem;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5),
+                         0 0 60px rgba(254, 202, 87, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 30px rgba(255, 107, 107, 0.5), 0 0 60px rgba(254, 202, 87, 0.3); }
+            to { text-shadow: 0 0 40px rgba(255, 107, 107, 0.8), 0 0 80px rgba(254, 202, 87, 0.5); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #a0a0a0;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* Buttons Container */
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 900px;
+        }
+
+        /* Game Buttons */
+        .game-btn {
+            position: relative;
+            padding: 30px 50px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            min-width: 220px;
+        }
+
+        .game-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .game-btn:hover::before {
+            left: 100%;
+        }
+
+        .game-btn:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Indoor Games Button */
+        .indoor-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .indoor-btn:hover {
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Outdoor Games Button */
+        .outdoor-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+        }
+
+        .outdoor-btn:hover {
+            box-shadow: 0 20px 50px rgba(245, 87, 108, 0.6);
+        }
+
+        /* Mobile Games Button */
+        .mobile-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+        }
+
+        .mobile-btn:hover {
+            box-shadow: 0 20px 50px rgba(79, 172, 254, 0.6);
+        }
+
+        /* Button Icons */
+        .btn-icon {
+            display: block;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Decorative Elements */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Footer */
+        footer {
+            position: absolute;
+            bottom: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .game-btn {
+                padding: 25px 40px;
+                font-size: 1.2rem;
+                min-width: 200px;
+            }
+
+            .buttons-container {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Shapes -->
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Stars -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <header>
+            <h1 class="logo">🎮 Game Zone</h1>
+            <p class="subtitle">Choose Your Adventure</p>
+        </header>
+
+        <div class="buttons-container">
+            <a href="inddor.html" class="game-btn indoor-btn">
+                <span class="btn-icon">🏠</span>
+                Indoor Games
+            </a>
+            
+            <a href="outdoor.html" class="game-btn outdoor-btn">
+                <span class="btn-icon">🌳</span>
+                Outdoor Games
+            </a>
+            
+            <a href="mobile.html" class="game-btn mobile-btn">
+                <span class="btn-icon">📱</span>
+                Mobile Games
+            </a>
+            
+            <a href="gym.html" class="game-btn gym-btn">
+                <span class="btn-icon">💪</span>
+                Gym
+            </a>
+        </div>
+
+        <footer>
+            <p>© 2024 Game Zone - Play & Enjoy!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Generate twinkling stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            star.style.width = Math.random() * 3 + 2 + 'px';
+            star.style.height = star.style.width;
+            starsContainer.appendChild(star);
+        }
+    // Add event listener for smooth page transitionsbetween game categories
+    document.addEventListener('DOMContentLoaded', function() {
+        const allLinks = document.querySelectorAll('.game-btn');
+        allLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            setTimeout(() => {
+            window.location.href = this.href;
+            }, 300);
+        });
+        });
+    });
+    </script>
+</body>
+</html>

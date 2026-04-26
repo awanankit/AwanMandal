@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awan Mandal - Charming Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: sparkle 4s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-50px) rotate(360deg); }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(180deg, transparent 0%, rgba(15, 52, 96, 0.8) 100%);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(233, 69, 96, 0.5);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 span {
+            color: #e94560;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #a0a0a0;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #e94560, #ff6b6b);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 0.6s both;
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.6);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Info Boxes Section */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .section-title .line {
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        .boxes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1), rgba(255, 107, 107, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-box:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #e94560;
+            box-shadow: 0 20px 50px rgba(233, 69, 96, 0.3);
+        }
+
+        .info-box:hover::before {
+            opacity: 1;
+        }
+
+        .info-box .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-box h3 {
+            color: #fff;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-box p {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-box .click-hint {
+            margin-top: 15px;
+            color: #e94560;
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-box:hover .click-hint {
+            opacity: 1;
+        }
+
+        /* Modal for Company Info */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            border: 2px solid #e94560;
+            box-shadow: 0 30px 60px rgba(233, 69, 96, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #e94560;
+        }
+
+        .fmodal h2 {
+            font-family: 'Playfair Display', serif;
+            color: #45e9d0;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .modal p {
+            color: #d0d0d0;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .modal .highlight {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #e94560;
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #a0a0a0;
+        }
+
+        footer a {
+            color: #e94560;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Welcome to <span>Awan Mandal</span></h1>
+        <p>Discover the charm of excellence. Click on the boxes below to explore our company and connect with us.</p>
+        <a href="go-ahead.html" class="hero-btn">Get Started →</a>
+    </section>
+
+    <!-- Info Boxes Section -->
+    <div class="container">
+        <div class="section-title">
+            <h2>Explore Our World</h2>
+            <div class="line"></div>
+        </div>
+
+        <div class="boxes-grid">
+            <!-- Box 1: About Us -->
+            <div class="info-box" onclick="showModal('about')">
+                <div class="icon">🏢</div>
+                <h3>About Us</h3>
+                <p>Learn about our journey, mission, and vision for the future.</p>
+                <span class="click-hint">Click to learn more →</span>
+            </div>
+
+            <!-- Box 2: Our Services -->
+            <div class="info-box" onclick="showModal('services')">
+                <div class="icon">⚙️</div>
+                <h3>Our Services</h3>
+                <p>Discover the range of services we offer to meet your needs.</p>
+                <span class="click-hint">Click to learn more →</span>
+            </div>
+
+            <!-- Box 3: Our Team -->
+            <div class="info-box" onclick="showModal('team')">
+                <div class="icon">👥</div>
+                <h3>Our Team</h3>
+                <p>Meet the talented professionals behind our success.</p>
+                <span class="click-hint">Click to learn more →</span>
+            </div>
+
+            <!-- Box 4: Contact -->
+            <div class="info-box" onclick="showModal('contact')">
+                <div class="icon">📞</div>
+                <h3>Contact Us</h3>
+                <p>Get in touch with us for inquiries and collaborations.</p>
+                <span class="click-hint">Click to learn more →</span>
+            </div>
+
+            <!-- Box 5: Projects -->
+            <div class="info-box" onclick="showModal('projects')">
+                <div class="icon">🎯</div>
+                <h3>Our Projects</h3>
+                <p>Explore our portfolio of successful projects and achievements.</p>
+                <span class="click-hint">Click to learn more →</span>
+            </div>
+
+            <!-- Box 6: Testimonials -->
+            <div class="info-box" onclick="showModal('testimonials')">
+                <div class="icon">⭐</div>
+                <h3>Testimonials</h3>
+                <p>See what our clients say about their experience with us.</p>
+                <span class="click-hint">Click to learn more →</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Awan Mandal. All rights reserved. | <a href="go-ahead.html">Continue to Next Page →</a></p>
+    </footer>
+
+    <script>
+        // Company Information Data
+        const companyInfo = {
+            about: {
+                title: "About Awan Mandal",
+                content: `
+                    <p>Welcome to <span class="highlight">Awan Mandal</span>, where innovation meets excellence!</p>
+                    <p>Founded with a vision to transform ideas into reality, we have been serving our clients with dedication and passion. Our journey began with a simple mission: to provide exceptional solutions that make a difference.</p>
+                    <p>Today, we stand as a testament to hard work, creativity, and unwavering commitment to quality. We believe in building lasting relationships with our clients through transparency and trust.</p>
+                `
+            },
+            services: {
+                title: "Our Services",
+                content: `
+                    <p>At <span class="highlight">Awan Mandal</span>, we offer a comprehensive range of services:</p>
+                    <p>✓ <strong>Web Development</strong> - Modern, responsive websites tailored to your needs</p>
+                    <p>✓ <strong>UI/UX Design</strong> - Beautiful and intuitive user experiences</p>
+                    <p>✓ <strong>Consulting</strong> - Expert advice to help your business grow</p>
+                    <p>✓ <strong>Digital Marketing</strong> - Reach your audience effectively</p>
+                    <p>✓ <strong>Custom Solutions</strong> - Tailored services to meet unique requirements</p>
+                `
+            },
+            team: {
+                title: "Our Team",
+                content: `
+                    <p>Our team is our greatest asset. At <span class="highlight">Awan Mandal</span>, we have assembled a group of talented professionals who are passionate about what they do.</p>
+                    <p>✓ <strong>Creative Designers</strong> - Bringing your visions to life</p>
+                    <p>✓ <strong>Expert Developers</strong> - Building robust solutions</p>
+                    <p>✓ <strong>Strategic Planners</strong> - Charting the best path forward</p>
+                    <p>✓ <strong>Support Specialists</strong> - Always ready to help</p>
+                    <p>Together, we work collaboratively to deliver excellence in every project.</p>
+                `
+            },
+            contact: {
+                title: "Contact Us",
+                content: `
+                    <p>We'd love to hear from you! Get in touch with <span class="highlight">Awan Mandal</span> today.</p>
+                    <p>📍 <strong>Address:</strong> Mandal, Awan Area</p>
+                    <p>📧 <strong>Email:</strong> info@awanmandal.com</p>
+                    <p>📞 <strong>Phone:</strong> +1 234 567 8900</p>
+                    <p>🕐 <strong>Hours:</strong> Mon - Fri: 9AM - 6PM</p>
+                    <p>Feel free to reach out for inquiries, collaborations, or just to say hello!</p>
+                `
+            },
+            projects: {
+                title: "Our Projects",
+                content: `
+                    <p>At <span class="highlight">Awan Mandal</span>, we take pride in our diverse portfolio of successful projects:</p>
+                    <p>🎯 <strong>100+ Projects Completed</strong> - Across various industries</p>
+                    <p>🎯 <strong>50+ Happy Clients</strong> - Who trust us consistently</p>
+                    <p>🎯 <strong>Award-Winning Solutions</strong> - Recognized for excellence</p>
+                    <p>🎯 <strong>Innovation Hub</strong> - Pioneering new technologies</p>
+                    <p>Each project reflects our commitment to quality and innovation.</p>
+                `
+            },
+            testimonials: {
+                title: "What Our Clients Say",
+                content: `
+                    <p>Don't just take our word for it. Here's what our clients say about <span class="highlight">Awan Mandal</span>:</p>
+                    <p>⭐ <strong>"Outstanding service and professionalism!"</strong> - Client Review</p>
+                    <p>⭐ <strong>"They exceeded all our expectations."</strong> - Happy Customer</p>
+                    <p>⭐ <strong>"Highly recommended for quality work."</strong> - Satisfied Client</p>
+                    <p>⭐ <strong>"Awan Mandal is our go-to partner."</strong> - Long-term Client</p>
+                    <p>We value every client and strive to maintain our reputation for excellence.</p>
+                `
+            }
+        };
+
+        // Show Modal Function
+        function showModal(type) {
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalContent = document.getElementById('modalContent');
+            const info = companyInfo[type];
+            
+            if (info) {
+                modalContent.innerHTML = `
+                    <h2>${info.title}</h2>
+                    ${info.content}
+                `;
+                modalOverlay.classList.add('active');
+            }
+        }
+
+        // Close Modal Function
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modalOverlay')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Add floating particles
+        function createParticles() {
+            const container = document.querySelector('.hero');
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.opacity = Math.random() * 0.5 + 0.3;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+    </script>
+</body>
+</html>

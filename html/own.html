@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Own Home Gym</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0033 25%, #330066 50%, #1a0033 75%, #0a0e27 100%);
+            background-size: 400% 400%;
+            animation: mysticalShift 15s ease infinite;
+            color: #e0d5ff;
+            min-height: 100vh;
+        }
+        
+        @keyframes mysticalShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #7c3aed, 0 0 20px #a855f7; }
+            50% { text-shadow: 0 0 20px #a855f7, 0 0 40px #d946ef; }
+        }
+        
+        @keyframes auraPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.5), inset 0 0 20px rgba(168, 85, 247, 0.1); }
+            50% { box-shadow: 0 0 40px rgba(217, 70, 239, 0.8), inset 0 0 30px rgba(217, 70, 239, 0.2); }
+        }
+        
+        header {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.3) 0%, rgba(168, 85, 247, 0.3) 100%);
+            border-bottom: 3px solid #a855f7;
+            color: #fff;
+            text-align: center;
+            padding: 60px 20px;
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.6), inset 0 0 30px rgba(124, 58, 237, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-family: 'Playfair Display', serif;
+            animation: glow 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            color: #d0b5ff;
+            animation: glow 4s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid rgba(168, 85, 247, 0.5);
+            animation: auraPulse 4s ease-in-out infinite;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            box-shadow: 0 0 60px rgba(217, 70, 239, 1), inset 0 0 40px rgba(168, 85, 247, 0.3);
+            border-color: #d946ef;
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: #f0a0ff;
+            border-bottom: 2px solid #a855f7;
+            padding-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+        }
+        
+        p {
+            color: #d0b5ff;
+            line-height: 1.8;
+        }
+        
+        ol {
+            color: #d0b5ff;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            color: #d0b5ff;
+        }
+        
+        li strong {
+            color: #f0a0ff;
+            text-shadow: 0 0 5px rgba(240, 160, 255, 0.6);
+        }
+        
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid rgba(168, 85, 247, 0.6);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        img:hover {
+            box-shadow: 0 0 40px rgba(217, 70, 239, 0.8), 0 0 60px rgba(168, 85, 247, 0.6);
+            transform: scale(1.02);
+        }
+        
+        .image-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .image-grid img {
+            flex: 1 1 calc(50% - 20px);
+            min-width: 300px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.4) 0%, rgba(168, 85, 247, 0.4) 100%);
+            color: #f0a0ff;
+            border-top: 3px solid #a855f7;
+            box-shadow: 0 -10px 30px rgba(168, 85, 247, 0.4);
+        }
+        
+        footer p {
+            margin: 0;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Create Your Own Beautiful Home Gym</h1>
+        <p>Transform your space into a charming fitness haven with these simple instructions and inspiring ideas.</p>
+    </header>
+    <div class="container">
+        <section class="section">
+            <h2>Why Create a Home Gym?</h2>
+            <p>A home gym allows you to work out on your schedule, save money, and enjoy the comfort of your own space. Make it charming by incorporating personal touches like plants, mirrors, and motivational decor.</p>
+            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cozy home gym setup">
+        </section>
+        <section class="section">
+            <h2>Step-by-Step Instructions</h2>
+            <ol>
+                <li><strong>Choose Your Space:</strong> Select a room or area that's well-ventilated and has enough room for movement. Clear out clutter and ensure good lighting.</li>
+                <li><strong>Gather Equipment:</strong> Start with basics like dumbbells, a yoga mat, resistance bands, and a stability ball. Add a treadmill or bike if space allows.</li>
+                <li><strong>Design the Layout:</strong> Arrange equipment for easy access. Use rugs for flooring and shelves for storage to keep it organized and charming.</li>
+                <li><strong>Add Personal Touches:</strong> Incorporate mirrors for form checks, plants for freshness, and posters or art for motivation.</li>
+                <li><strong>Safety First:</strong> Ensure proper ventilation, non-slip mats, and store heavy items securely.</li>
+                <li><strong>Maintain and Motivate:</strong> Keep the space clean, track progress, and perhaps add a sound system for music.</li>
+            </ol>
+            <div class="image-grid">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Home gym equipment">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Charming gym decor">
+            </div>
+        </section>
+        <section class="section">
+            <h2>Inspiring Pictures</h2>
+            <p>Here are some beautiful examples to spark your creativity:</p>
+            <div class="image-grid">
+                <img src="https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Minimalist home gym">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Colorful gym space">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wooden gym setup">
+                <img src="https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Modern home gym">
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2023 Home Gym Guide. Stay fit and healthy!</p>
+    </footer>
+</body>
+</html>

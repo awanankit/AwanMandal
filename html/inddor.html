@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indoor Games - Fun Activities for Everyone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #2d3436;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .game-card:hover .game-image {
+            transform: scale(1.05);
+        }
+
+        .image-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(transparent, white);
+        }
+
+        .game-content {
+            padding: 25px;
+        }
+
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: #2d3436;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-icon {
+            font-size: 1.8rem;
+        }
+
+        .game-description {
+            color: #636e72;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .pros, .cons {
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .pros {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+        }
+
+        .cons {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .pros h4, .cons h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .pros h4 {
+            color: #00b894;
+        }
+
+        .cons h4 {
+            color: #e17055;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            font-size: 0.85rem;
+        }
+
+        .pros li, .cons li {
+            padding: 4px 0;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00b894;
+            font-weight: bold;
+        }
+
+        .cons li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: #e17055;
+            font-weight: bold;
+        }
+
+        .category-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.95);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #667eea;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎮 Indoor Games</h1>
+        <p>Discover the joy of indoor entertainment - Fun for all ages!</p>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">Popular Indoor Games</h2>
+        
+        <div class="games-grid">
+            <!-- Chess -->
+            <div class="game-card">
+                <span class="category-tag">Board Game</span>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=600&h=400&fit=crop" alt="Chess" class="game-image">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title"><span class="game-icon">♟️</span> Chess</h3>
+                    <p class="game-description">The timeless game of strategy and intellect. Chess has been played for centuries, challenging players to think multiple moves ahead and outsmart their opponents through tactical planning.</p>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul>
+                                <li>Improves critical thinking</li>
+                                <li>Enhances memory & focus</li>
+                                <li>No physical space needed</li>
+                                <li>Can be played solo</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul>
+                                <li>Can be mentally exhausting</li>
+                                <li>Steep learning curve</li>
+                                <li>May seem boring to kids</li>
+                                <li>Requires opponent</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Tennis -->
+            <div class="game-card">
+                <span class="category-tag">Sport</span>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1613225147297-1d1c2c7a5d5a?w=600&h=400&fit=crop" alt="Table Tennis" class="game-image">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title"><span class="game-icon">🏓</span> Table Tennis</h3>
+                    <p class="game-description">Also known as Ping Pong, this fast-paced game improves reflexes and hand-eye coordination. It's perfect for small spaces and provides an excellent cardiovascular workout.</p>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul>
+                                <li>Great exercise</li>
+                                <li>Improves reflexes</li>
+                                <li>Fun for all ages</li>
+                                <li>Compact equipment</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul>
+                                <li>Requires table & equipment</li>
+                                <li>Can cause arm fatigue</li>
+                                <li>Needs good lighting</li>
+                                <li>Noise for neighbors</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Games -->
+            <div class="game-card">
+                <span class="category-tag">Digital</span>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&h=400&fit=crop" alt="Video Games" class="game-image">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title"><span class="game-icon">🎮</span> Video Games</h3>
+                    <p class="game-description">Modern interactive entertainment that spans countless genres from action to puzzle games. Offers immersive experiences and can connect players globally through online gaming.</p>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul>
+                                <li>Entertainment variety</li>
+                                <li>Improves coordination</li>
+                                <li>Social connectivity</li>
+                                <li>Cognitive stimulation</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul>
+                                <li>Screen time concerns</li>
+                                <li>Can be addictive</li>
+                                <li>Expensive equipment</li>
+                                <li>Sedentary lifestyle</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scrabble -->
+            <div class="game-card">
+                <span class="category-tag">Board Game</span>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=600&h=400&fit=crop" alt="Scrabble" class="game-image">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title"><span class="game-icon">📝</span> Scrabble</h3>
+                    <p class="game-description">The classic word game that challenges your vocabulary and strategic thinking. Players create words from letter tiles on a game board, competing for the highest score.</p>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul>
+                                <li>Expands vocabulary</li>
+                                <li>Educational value</li>
+                                <li>No time limit</li>
+                                <li>Great for families</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul>
+                                <li>Requires English knowledge</li>
+                                <li>Slow-paced</li>
+                                <li>Tile disputes possible</li>
+                                <li>Limited replay value</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billiards -->
+            <div class="game-card">
+                <span class="category-tag">Sport</span>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1525124568695-c4b6d3e5a6b7?w=600&h=400&fit=crop" alt="Billiards" class="game-image">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title"><span class="game-icon">🎱</span> Billiards</h3>
+                    <p class="game-description">A sophisticated cue sport that combines skill, precision, and strategy. Players use cues to strike balls on a rectangular table, aiming to pocket them in specific ways.</p>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul>
+                                <li>Improves focus</li>
+                                <li>Social activity</li>
+                                <li>Low impact exercise</li>
+                                <li>Teaches patience</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul>
+                                <li>Expensive table</li>
+                                <li>Requires large space</li>
+                                <li>Steep learning curve</li>
+                                <li>Need proper lighting</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Puzzles -->
+            <div class="game-card">
+                <span class="category-tag">Puzzle</span>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1494059980473-813e73ee784b?w=600&h=400&fit=crop" alt="Puzzles" class="game-image">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title"><span class="game-icon">🧩</span> Jigsaw Puzzles</h3>
+                    <p class="game-description">A relaxing and meditative activity that challenges your problem-solving skills. Puzzles come in various difficulty levels and beautiful artwork, making them perfect for solo or group play.</p>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul>
+                                <li>Reduces stress</li>
+                                <li>Improves memory</li>
+                                <li>Solo or group activity</li>
+                                <li>No noise</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul>
+                                <li>Can be frustrating</li>
+                                <li>Requires flat surface</li>
+                                <li>Lost pieces problem</li>
+                                <li>Time-consuming</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Board Games -->
+            <div class="game-card">
+                <span class="category-tag">Board Game</span>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1611371805429-9e0e94e31356?w=600&h=400&fit=crop" alt="Board Games" class="game-image">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title"><span class="game-icon">🎲</span> Board Games</h3>
+                    <p class="game-description">From Monopoly to Catan, board games offer endless entertainment with friends and family. They combine luck, strategy, and social interaction in countless themed experiences.</p>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul>
+                                <li>Social bonding</li>
+                                <li>Many genres available</li>
+                                <li>No screen needed</li>
+                                <li>Reusable</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul>
+                                <li>Setup time</li>
+                                <li>Requires players</li>
+                                <li>Can be lengthy</li>
+                                <li>Lost pieces</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Karaoke -->
+            <div class="game-card">
+                <span class="category-tag">Music</span>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=400&fit=crop" alt="Karaoke" class="game-image">
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title"><span class="game-icon">🎤</span> Karaoke</h3>
+                    <p class="game-description">Singing along to your favorite songs with friends and family. A fun way to express yourself, relieve stress, and enjoy music together in the comfort of your home.</p>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul>
+                                <li>Great stress relief</li>
+                                <li>Fun group activity</li>
+                                <li>No skills required</li>
+                                <li>Boosts confidence</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul>
+                                <li>Noise complaints</li>
+                                <li>Equipment needed</li>
+                                <li>May disturb others</li>
+                                <li>Song licensing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>🎉 Enjoy the wonderful world of indoor games! Choose your favorite and have fun!</p>
+    </footer>
+</body>
+</html>

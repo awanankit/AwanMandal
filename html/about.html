@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Awan Mandal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B4513;
+            --secondary: #D2691E;
+            --accent: #F5DEB3;
+            --dark: #2C1810;
+            --light: #FFF8F0;
+            --gold: #DAA520;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: var(--dark);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gold);
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 8px 15px;
+            gap: 10px;
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            width: 150px;
+        }
+
+        .search-container input::placeholder {
+            color: rgba(255,248,240,0.6);
+        }
+
+        .search-container button {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            background: linear-gradient(135deg, rgba(44, 24, 16, 0.9), rgba(139, 69, 19, 0.8)),
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+            opacity: 0.4;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255, 248, 240, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 25px;
+            height: 25px;
+            border-bottom: 2px solid var(--accent);
+            border-right: 2px solid var(--accent);
+            transform: rotate(45deg);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Story Section */
+        .story {
+            padding: 100px 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .story-image {
+            position: relative;
+        }
+
+        .story-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 20px 20px 0 var(--accent);
+        }
+
+        .story-image::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 20px;
+            top: -20px;
+            left: -20px;
+            z-index: -1;
+        }
+
+        .story-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .story-content h2::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+            bottom: -10px;
+            left: 0;
+        }
+
+        .story-content p {
+            color: #555;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* Values Section */
+        .values {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            padding: 80px 5%;
+            text-align: center;
+        }
+
+        .values h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 3rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            background: rgba(255, 248, 240, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 248, 240, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 248, 240, 0.2);
+        }
+
+        .value-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-card h3 {
+            color: var(--accent);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-card p {
+            color: rgba(255, 248, 240, 0.8);
+            font-size: 0.95rem;
+        }
+
+        /* Team Section */
+        .team {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .team h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .team-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .team-member {
+            text-align: center;
+            position: relative;
+        }
+
+        .team-member .image-wrapper {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover .image-wrapper {
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+
+        .team-member img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-member h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--dark);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-member .role {
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .team-member p {
+            color: #666;
+            font-size: 0.9rem;
+            padding: 0 20px;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: var(--accent);
+            padding: 80px 5%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '✦';
+            position: absolute;
+            font-size: 100px;
+            color: rgba(139, 69, 19, 0.1);
+            top: -20px;
+            left: 10%;
+        }
+
+        .cta::after {
+            content: '✦';
+            position: absolute;
+            font-size: 80px;
+            color: rgba(139, 69, 19, 0.1);
+            bottom: -20px;
+            right: 10%;
+        }
+
+        .cta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            color: #555;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(139, 69, 19, 0.3);
+        }
+
+        .cta-button:hover {
+            background: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: var(--accent);
+            padding: 40px 5%;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .search-container {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .story {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .story-image::before {
+                display: none;
+            }
+            
+            .story-content h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="go-ahead.html" class="nav-logo">Awan Mandal</a>
+        <ul class="nav-links">
+            <li><a href="go-ahead.html">Home</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" placeholder="Search...">
+            <button type="submit">🔍</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>About Us</h1>
+            <p>Discover the story behind Awan Mandal — where tradition meets elegance, and every moment becomes a cherished memory.</p>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section class="story">
+        <div class="story-image">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600" alt="Our Journey">
+        </div>
+        <div class="story-content">
+            <h2>Our Story</h2>
+            <p>Welcome to Awan Mandal — a place born from passion, crafted with love, and designed to bring people together. Our journey began with a simple vision: to create spaces where traditions are honored and new memories are made.</p>
+            <p>What started as a dream has blossomed into a beloved destination where every visitor feels like family. We believe in the magic of gatherings, the warmth of hospitality, and the beauty of shared moments.</p>
+            <p>Our name "Awan Mandal" reflects our commitment to creating a harmonious circle — a community where everyone is welcome, and every story matters.</p>
+        </div>
+    </section>
+
+    <!-- Our Values Section -->
+    <section class="values">
+        <h2>What We Stand For</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="icon">♥</div>
+                <h3>Warm Hospitality</h3>
+                <p>We welcome every guest with open arms and genuine care, making you feel right at home from the moment you arrive.</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">✦</div>
+                <h3>Rich Traditions</h3>
+                <p>We honor our cultural roots and preserve the timeless traditions that make our heritage so special and meaningful.</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">★</div>
+                <h3>Excellence</h3>
+                <p>Every detail matters to us. We strive for excellence in everything we do, from service to experiences.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team">
+        <h2>Meet Our Family</h2>
+        <p class="team-subtitle">The wonderful people who bring Awan Mandal to life</p>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400" alt="Team Member">
+                </div>
+                <h3>Ahmed Khan</h3>
+                <p class="role">Founder & Visionary</p>
+                <p>The heart and soul behind Awan Mandal, turning dreams into reality with passion and dedication.</p>
+            </div>
+            <div class="team-member">
+                <div class="image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400" alt="Team Member">
+                </div>
+                <h3>Fatima Ahmed</h3>
+                <p class="role">Creative Director</p>
+                <p>Bringing elegance and charm to every corner with her keen eye for design and detail.</p>
+            </div>
+            <div class="team-member">
+                <div class="image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400" alt="Team Member">
+                </div>
+                <h3>Rashid Ali</h3>
+                <p class="role">Operations Manager</p>
+                <p>Ensuring everything runs smoothly so every guest enjoys a seamless, memorable experience.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2>Be Part of Our Story</h2>
+        <p>We invite you to experience the warmth and beauty of Awan Mandal. Come, be our guest, and create beautiful memories with us.</p>
+        <a href="contact.html" class="cta-button">Get in Touch</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Awan Mandal. Made with ♥ and warm hospitality.</p>
+    </footer>
+
+</body>
+</html>
