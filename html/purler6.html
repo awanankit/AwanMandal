@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purler Business Growth</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top, #f9efff, #e6d1ff 20%, #2b1b46 85%);
+      color: #f7ecff;
+      overflow-x: hidden;
+    }
+    .page-wrap {
+      padding: 40px;
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      animation: pageEnter 1.1s ease-out forwards;
+    }
+    @keyframes pageEnter {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    header {
+      text-align: center;
+      padding: 1.5rem 0 2rem;
+    }
+    .title {
+      margin: 0;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: 0.03em;
+      text-shadow: 0 18px 50px rgba(20, 6, 45, 0.35);
+    }
+    .subtitle {
+      margin: 0.85rem auto 0;
+      max-width: 720px;
+      color: #f3e0ff;
+      font-size: 1rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.95;
+    }
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: stretch;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 32px;
+      padding: 1.75rem;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 32px 80px rgba(18, 7, 36, 0.22);
+    }
+    .card h2 {
+      margin: 0 0 0.85rem;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+    .card p {
+      margin: 0 0 1.2rem;
+      line-height: 1.75;
+      color: #f1e3ff;
+    }
+    .features {
+      display: grid;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .feature {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .badge {
+      min-width: 42px;
+      min-height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f49bff, #7c5ce8);
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 12px 24px rgba(132, 65, 204, 0.24);
+    }
+    .picture-box {
+      position: relative;
+      padding: 5px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, #d7b1ff, #8b5cf6);
+      overflow: hidden;
+    }
+    .picture-frame {
+      display: block;
+      width: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #241139;
+    }
+    .picture {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      animation: floatImage 6s ease-in-out infinite;
+      background: linear-gradient(135deg, #f9efff, #8b5cf6);
+    }
+    .picture-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.28), transparent 42%);
+      pointer-events: none;
+    }
+    .picture-caption {
+      position: absolute;
+      left: 1.2rem;
+      bottom: 1.2rem;
+      color: #fff;
+      font-weight: 700;
+      text-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+      font-size: 1rem;
+    }
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.5rem;
+      padding: 0.95rem 1.5rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #a463f2, #6d28d9);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .link-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(97, 56, 182, 0.25);
+      opacity: 0.95;
+    }
+    @keyframes floatImage {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .image-placeholder {
+      display: grid;
+      place-items: center;
+      min-height: 260px;
+      color: rgba(255,255,255,0.88);
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #e8d8ff;
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+    @media (max-width: 640px) {
+      .page-wrap { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <header>
+      <p class="subtitle">Magical Growth for a Purler Business</p>
+      <h1 class="title">A Beautiful Page for Materials, Design, and Dreamy Growth</h1>
+    </header>
+    <div class="grid">
+      <section class="card">
+        <h2>Materials to Grow Your Purler Business</h2>
+        <p>The heart of a successful purler business is grounded in quality materials. Choose rich potting soil, organic compost, and well-balanced fertilizer. These ingredients help plants thrive, bloom more vividly, and build a sustainable business foundation.</p>
+        <div class="features">
+          <div class="feature">
+            <div class="badge">1</div>
+            <div>
+              <strong>Rich soil mix</strong><br>
+              A blend of coco peat, compost, and minerals gives each plant a nourishing base.
+            </div>
+          </div>
+          <div class="feature">
+            <div class="badge">2</div>
+            <div>
+              <strong>Natural nutrients</strong><br>
+              Compost tea, bone meal, and seaweed extract support steady, healthy growth.
+            </div>
+          </div>
+          <div class="feature">
+            <div class="badge">3</div>
+            <div>
+              <strong>Moisture control</strong><br>
+              Clean water, good drainage, and gentle misting keep the leaves glossy.
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <h2>Design and Presentation</h2>
+        <p>Design matters beyond the garden. Use elegant packaging, tasteful labels, and soft pastel palettes. Present your purler offerings in gift-ready bundles, styled with ribbons and textured boxes that feel premium and approachable.</p>
+        <p>Use visual harmony to tell a story: sustainable materials, hand-written notes, and refined floral arrangements turn each order into a memorable experience.</p>
+      </section>
+    </div>
+    <div class="card" style="margin-top: 1.5rem;">
+      <div class="picture-box">
+        <div class="picture-frame">
+          <div class="picture image-placeholder">
+            Purler magic in motion
+          </div>
+          <div class="picture-overlay"></div>
+        </div>
+        <div class="picture-caption">A shimmering border for your business vision</div>
+      </div>
+      <h2 style="margin-top: 1.5rem; color: #fff;">Enchanting Growth</h2>
+      <p style="color: #f1e3ff; line-height: 1.8;">When you blend the right materials with a thoughtful business design, your purler venture becomes enchanting. Every element from soil to packaging contributes to a memorable brand experience that customers trust and love.</p>
+    </div>
+    <div class="footer">Step into the page and feel the magic of a purler business built with care, creativity, and beautiful materials.</div>
+  </div>
+</body>
+</html>
