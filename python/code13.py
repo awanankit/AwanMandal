@@ -1,8 +1,8 @@
 import turtle
 t = turtle.Turtle()
-t.speed(10)
-for i in range(36):
+t.speed(100)
+for i in range(900):
     t.circle(100)
-    t.left(10)
+    t.left(100)
 
 turtle.done()

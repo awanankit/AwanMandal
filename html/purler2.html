@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PURLER ASSOTIATION</title>
+  <style>
+    :root {
+      --bg1: #0b1f3a;
+      --bg2: #2a4468;
+      --accent: #ff9b5c;
+      --accent2: #7c5cff;
+      --text: #f7f3ff;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top right, rgba(255,155,92,.2), transparent 30%), linear-gradient(135deg, #071125 0%, #10284b 45%, #0c1f3d 100%);
+      color: var(--text);
+    }
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      position: relative;
+    }
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: .05em;
+      padding: 12px 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      transition: .3s;
+      background: rgba(255,255,255,.04);
+    }
+    .nav a:hover {
+      background: rgba(255,255,255,.15);
+      transform: translateY(-2px);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 30px;
+      align-items: center;
+      min-height: 75vh;
+    }
+    .title-block {
+      max-width: 640px;
+    }
+    .title-block h1 {
+      font-size: 4.2rem;
+      line-height: 1.02;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+    }
+    .title-block p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,.8);
+      margin-bottom: 26px;
+    }
+    .search-panel {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .search-panel input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: .3s;
+    }
+    .search-panel input:focus {
+      border-color: rgba(255,155,92,.8);
+      box-shadow: 0 0 0 4px rgba(255,155,92,.12);
+    }
+    .search-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .search-row button {
+      padding: 14px 22px;
+      border: none;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff9b5c, #ff67bb);
+      color: #08101e;
+      box-shadow: 0 14px 30px rgba(255,155,92,.22);
+      transition: .3s;
+    }
+    .search-row button:hover {
+      transform: translateY(-2px);
+    }
+    .feature-box {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 28px;
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+    }
+    .feature-box .item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .feature-box .item strong {
+      display: block;
+      font-size: 1rem;
+    }
+    .feature-box .item span {
+      color: rgba(255,255,255,.7);
+      line-height: 1.6;
+    }
+    .magic-panel {
+      position: relative;
+    }
+    .hero-visual {
+      position: relative;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(124, 92, 255,0.2), rgba(255,155,92,0.14));
+      border-radius: 38px;
+      border: 1px solid rgba(255,255,255,.1);
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(255,155,92,.5), transparent);
+      top: -30px;
+      right: -40px;
+      filter: blur(40px);
+    }
+    .hero-visual::after {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(124,92,255,.5), transparent);
+      bottom: -40px;
+      left: -40px;
+      filter: blur(32px);
+    }
+    .hero-visual .orb {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.05));
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      font-size: 1rem;
+      padding: 24px;
+      z-index: 1;
+      box-shadow: 0 20px 90px rgba(0,0,0,.2);
+    }
+    .cta {
+      margin-top: 34px;
+      text-align: center;
+    }
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 40px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(45deg, #ff9b5c, #7c5cff, #2b9bff);
+      background-size: 300% 300%;
+      animation: rainbow 4s ease infinite;
+      color: #08101e;
+      box-shadow: 0 18px 40px rgba(56,54,144,.2);
+    }
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .cards-grid {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .intro-card {
+      position: relative;
+      border-radius: 30px;
+      min-height: 260px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 22px;
+      color: #fff;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 35px 80px rgba(0,0,0,.25);
+      cursor: pointer;
+      transition: .3s;
+    }
+    .intro-card:hover {
+      transform: translateY(-6px);
+    }
+    .intro-card .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 15%, rgba(9,12,37,.9) 90%);
+    }
+    .intro-card h3,
+    .intro-card p {
+      position: relative;
+      z-index: 1;
+    }
+    .intro-card h3 {
+      margin-bottom: 10px;
+    }
+    .intro-card p {
+      font-size: .95rem;
+      line-height: 1.6;
+      opacity: .95;
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3,9,28,.85);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+    }
+    .modal {
+      background: linear-gradient(180deg, rgba(9,12,37,.97), #070b1f);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 32px;
+      max-width: 640px;
+      width: 100%;
+      padding: 30px 28px;
+      box-shadow: 0 40px 120px rgba(0,0,0,.45);
+      position: relative;
+    }
+    .modal h2 {
+      margin-bottom: 14px;
+      font-size: 1.9rem;
+    }
+    .modal p {
+      color: rgba(255,255,255,.85);
+      line-height: 1.75;
+      margin-bottom: 18px;
+    }
+    .modal button {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+    @media (max-width: 960px) {
+      .hero { grid-template-columns: 1fr; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .nav { justify-content: center; }
+    }
+    @media (max-width: 640px) {
+      .title-block h1 { font-size: 3rem; }
+      .search-row { flex-direction: column; align-items: stretch; }
+      .cta a { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="nav">
+      <a href="aboutpurler.html">ABOUT US</a>
+      <a href="dipurler.html">DISCOVER</a>
+      <a href="copurler.html">CONTACT US</a>
+    </nav>
+    <section class="hero">
+      <div class="title-block">
+        <h1>PURLER ASSOTIATION</h1>
+        <p>Enter a world of charming discovery and legendary design. Search the magic, learn the story, and begin your journey with Purler.</p>
+        <div class="search-panel">
+          <div class="search-row">
+            <input type="search" placeholder="Search the realm of Purler..." aria-label="Search">
+            <button id="loginBtn" type="button">Login</button>
+          </div>
+          <div class="feature-box">
+            <div class="item">
+              <strong>Pure enchantment</strong>
+              <span>Find myths, tools, and beautiful tales woven into every corner.</span>
+            </div>
+            <div class="item">
+              <strong>Guided discovery</strong>
+              <span>Follow curated paths and unlock the secrets of Purler's magic.</span>
+            </div>
+            <div class="item">
+              <strong>Connected community</strong>
+              <span>Share the charm with friends and explore together.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="magic-panel">
+        <div class="hero-visual">
+          <div class="orb">
+            <strong>Purler Magic</strong>
+            <p>Legendary moments, endless inspiration.</p>
+          </div>
+        </div>
+        <div class="cta">
+          <a href="purler3.html">GET STARTED</a>
+        </div>
+      </div>
+    </section>
+    <section class="cards-grid">
+      <div class="intro-card" style="background-image:url('https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=800&q=80');" data-title="Purler Mirror" data-text="See your Purler intentions come alive in a glowing mirror of ideas and creativity. Use this box to reflect on your next great step.">
+        <div class="overlay"></div>
+        <h3>Purler Mirror</h3>
+        <p>Reflect on the next magical intention.</p>
+      </div>
+      <div class="intro-card" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80');" data-title="Purler Scroll" data-text="Open the scroll of guidance to reveal how to use promises, plans, and crafted rituals in your Purler journey. This box teaches you to follow the map.">
+        <div class="overlay"></div>
+        <h3>Purler Scroll</h3>
+        <p>Unroll secrets and guidance for every step.</p>
+      </div>
+      <div class="intro-card" style="background-image:url('https://images.unsplash.com/photo-1514895426389-6c6f3cc3ff69?auto=format&fit=crop&w=800&q=80');" data-title="Purler Beacon" data-text="Light the beacon and discover how to share your energy with others. This guidance explains how your intentions become a beautiful adventure.">
+        <div class="overlay"></div>
+        <h3>Purler Beacon</h3>
+        <p>Light the path, share the charm.</p>
+      </div>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <button id="closeModal" aria-label="Close">×</button>
+      <h2 id="modalTitle">Welcome</h2>
+      <p id="modalText">Your charming alert will appear here with beautiful details and guidance on Purler usage.</p>
+    </div>
+  </div>
+  <script>
+    const loginBtn = document.getElementById('loginBtn');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const closeModal = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
+    loginBtn.addEventListener('click', () => {
+      modalTitle.textContent = 'Welcome to Purler';
+      modalText.textContent = 'You have entered the enchanted login chamber. Please remember your key phrase and the magic will open the gates of charm.';
+      modalBackdrop.style.display = 'flex';
+    });
+    document.querySelectorAll('.intro-card').forEach(card => {
+      card.addEventListener('click', () => {
+        modalTitle.textContent = card.dataset.title;
+        modalText.textContent = card.dataset.text;
+        modalBackdrop.style.display = 'flex';
+      });
+    });
+    closeModal.addEventListener('click', () => {
+      modalBackdrop.style.display = 'none';
+    });
+    modalBackdrop.addEventListener('click', (event) => {
+      if (event.target === modalBackdrop) {
+        modalBackdrop.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

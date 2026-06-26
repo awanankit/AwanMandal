@@ -4,11 +4,11 @@ public class Append {
         int umber = 50;
         int[] array = new int[numbers.length + 1];
         System.arraycopy(numbers, 0, array, 0, numbers.length);
-        array[numbers.length] = umber;
+        array[numbers.length] = umber;hij \87t
         for (int i =0; i < array.length; i++) {
             System.out.println(array[i]);
             
     }
 }
-'
+
 

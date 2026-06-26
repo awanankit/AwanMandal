@@ -13,7 +13,7 @@ pen.width(2)
 colors = ["red", "orange", "yellow", "green", "blue", "purple"]
 
 # Draw flower pattern
-for i in range(120+6):
+for i in range(120+60):
     pen.pencolor(colors[i % 6])
     pen.circle(1000)
     pen.left(30)

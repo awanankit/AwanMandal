@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us - Magical Realm</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top, #29124a, #0b0015 50%);
+      color: #f1e5ff;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.15), transparent 18%),
+        radial-gradient(circle at 80% 15%, rgba(147, 112, 255, 0.18), transparent 16%),
+        radial-gradient(circle at 50% 80%, rgba(173, 216, 230, 0.12), transparent 22%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .page-wrap {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .glow-card {
+      position: relative;
+      max-width: 900px;
+      width: 100%;
+      padding: 50px 45px;
+      background: rgba(12, 0, 24, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 80px rgba(146, 74, 255, 0.18);
+      backdrop-filter: blur(16px);
+      border-radius: 32px;
+      overflow: hidden;
+    }
+
+    .glow-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      left: -40px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(147, 112, 255, 0.5), transparent 55%);
+      filter: blur(28px);
+    }
+
+    .glow-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: -10px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 55%);
+      filter: blur(24px);
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      letter-spacing: 1px;
+      text-shadow: 0 0 22px rgba(181, 126, 255, 0.68);
+    }
+
+    p {
+      margin: 0 0 22px;
+      line-height: 1.85;
+      font-size: 1.05rem;
+      color: #e8d8ff;
+    }
+
+    .stats {
+      display: flex;
+      gap: 22px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 170px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      box-shadow: 0 0 30px rgba(146, 74, 255, 0.08);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 2rem;
+      color: #ffffff;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 10px;
+      color: #d9c4ff;
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+      animation: twinkle 4s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%,
+      100% {
+        transform: scale(0.8);
+        opacity: 0.55;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+    }
+
+    .loader {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(82, 24, 145, 0.65), #09000f 60%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 999;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader .magic-text {
+      font-size: 1.3rem;
+      letter-spacing: 0.28em;
+      color: #e8d1ff;
+      text-transform: uppercase;
+      animation: glowPulse 1.8s ease-in-out infinite;
+    }
+
+    .loader .sparkle {
+      font-size: 4rem;
+      animation: rise 1.8s infinite;
+    }
+
+    .loader .ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      box-shadow: 0 0 40px rgba(160, 82, 255, 0.35);
+      border: 2px solid rgba(190, 150, 255, 0.2);
+    }
+
+    .loader .ring::before,
+    .loader .ring::after {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+    }
+
+    @keyframes glowPulse {
+      0%,
+      100% {
+        text-shadow: 0 0 18px rgba(221, 186, 255, 0.8);
+      }
+      50% {
+        text-shadow: 0 0 30px rgba(255, 255, 255, 1);
+      }
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(0);
+        opacity: 0.6;
+      }
+      50% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 0.6;
+      }
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeInContent 1.2s ease forwards 0.4s;
+    }
+
+    @keyframes fadeInContent {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader" id="loader">
+    <div class="ring"></div>
+    <div class="sparkle">✨</div>
+    <div class="magic-text">Opening the enchanted gateway...</div>
+  </div>
+  <div class="page-wrap">
+    <div class="glow-card fade-in">
+      <div class="stars">
+        <div class="star" style="top:10%;left:18%;animation-delay:0s;"></div>
+        <div class="star" style="top:22%;left:78%;animation-delay:0.7s;"></div>
+        <div class="star" style="top:40%;left:43%;animation-delay:1.3s;"></div>
+        <div class="star" style="top:62%;left:14%;animation-delay:0.4s;"></div>
+        <div class="star" style="top:76%;left:82%;animation-delay:1.1s;"></div>
+        <div class="star" style="top:54%;left:62%;animation-delay:0.9s;"></div>
+      </div>
+      <h1>About Us</h1>
+      <p>Welcome to our magical corner of the web. We are a team of dreamers, creators, and explorers who believe every idea deserves a little sparkle. On this page, you will discover our story, values, and the enchanted energy we bring to every project.</p>
+      <p>From whimsical design to thoughtful storytelling, our mission is to transform ordinary moments into memorable experiences. We craft magical journeys with authenticity, care, and a touch of wonder.</p>
+      <div class="stats">
+        <div class="stat">
+          <strong>100%</strong>
+          <span>Passion for creativity</span>
+        </div>
+        <div class="stat">
+          <strong>7</strong>
+          <span>Years of enchanted work</span>
+        </div>
+        <div class="stat">
+          <strong>Dream</strong>
+          <span>Guided by imagination</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('load', function () {
+      var loader = document.getElementById('loader');
+      setTimeout(function () {
+        loader.classList.add('hidden');
+      }, 2600);
+    });
+  </script>
+</body>
+</html>
