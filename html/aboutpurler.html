@@ -1,68 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Us - Magical Realm</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: radial-gradient(circle at top, #29124a, #0b0015 50%);
-      color: #f1e5ff;
-      overflow: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.15), transparent 18%),
-        radial-gradient(circle at 80% 15%, rgba(147, 112, 255, 0.18), transparent 16%),
-        radial-gradient(circle at 50% 80%, rgba(173, 216, 230, 0.12), transparent 22%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .page-wrap {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-    }
-
-    .glow-card {
-      position: relative;
-      max-width: 900px;
-      width: 100%;
-      padding: 50px 45px;
-      background: rgba(12, 0, 24, 0.86);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 0 80px rgba(146, 74, 255, 0.18);
-      backdrop-filter: blur(16px);
-      border-radius: 32px;
-      overflow: hidden;
-    }
-
-    .glow-card::before {
-      content: '';
-      position: absolute;
-      top: -40px;
-      left: -40px;
-      width: 220px;
-      height: 220px;
-      background: radial-gradient(circle, rgba(147, 112, 255, 0.5), transparent 55%);
-      filter: blur(28px);
-    }
-
-    .glow-card::after {
-      content: '';
-      position: absolute;
-      bottom: -20px;
-      right: -10px;
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>About Us - Magical Rzealm</title><style>body {margin: 0;min-height: 100vh;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background: radial-gradient(circle at top, #29124a, #0b0015 50%);color: #f1e5ff;overflow: hidden;}body::before {content: '';position: fixed;inset: 0;background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.15), transparent 18%),radial-gradient(circle at 80% 15%, rgba(147, 112, 255, 0.18), transparent 16%),radial-gradient(circle at 50% 80%, rgba(173, 216, 230, 0.12), transparent 22%);pointer-events: none;z-index: -1;}.page-wrap {position: relative;min-height: 100vh;display: flex;align-items: center;justify-content: center;padding: 40px;
+}.glow-card {position: relative;max-width: 900px;width: 100%;padding: 50px 45px;
+background: rgba(12, 0, 24, 0.86);
+border: 1px solid rgba(255, 255, 255, 0.12);
+box-shadow: 0 0 80px rgba(146, 74, 255, 0.18);
+backdrop-filter: blur(16px);
+border-radius: 32px;
+overflow: hidden;}
+.glow-card::before {
+content: '';
+position: absolute;
+top: -40px;
+left: -40px;
+width: 220px;
+height: 220px;
+background: radial-gradient(circle, rgba(147, 112, 255, 0.5), transparent 55%);
+filter: blur(28px);
+}
+.glow-card::after {
+content: '';
+position: absolute;
+bottom: -20px;
+ right: -10px;
       width: 220px;
       height: 220px;
       background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 55%);

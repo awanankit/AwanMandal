@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purler Instrument Craft</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1226;
+      --panel: rgba(12, 18, 45, 0.96);
+      --accent: #86d2ff;
+      --accent-strong: #c7f4ff;
+      --border: rgba(134, 210, 255, 0.4);
+      --text: #edf2ff;
+      --muted: #a0b0d6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(134, 210, 255, 0.1), transparent 25%),
+                  radial-gradient(circle at bottom right, rgba(199, 244, 255, 0.12), transparent 20%),
+                  linear-gradient(180deg, #081323 0%, #0f1935 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      animation: pageFade 1.2s ease-out both;
+    }
+
+    @keyframes pageFade {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page {
+      max-width: 980px;
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 32px;
+      box-shadow: 0 32px 120px rgba(0,0,0,0.35);
+      overflow: hidden;
+      position: relative;
+      padding: 3rem;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.45;
+    }
+
+    .page::before {
+      width: 220px;
+      height: 220px;
+      top: -80px;
+      right: -80px;
+      background: rgba(134, 210, 255, 0.16);
+    }
+
+    .page::after {
+      width: 240px;
+      height: 240px;
+      bottom: -90px;
+      left: -90px;
+      background: rgba(199, 244, 255, 0.1);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 3.5vw, 3.4rem);
+      line-height: 1.05;
+      margin-bottom: 1rem;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+      animation: floatText 1.6s ease-out both;
+    }
+
+    @keyframes floatText {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .materials {
+      display: grid;
+      gap: 1.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      margin-bottom: 2.75rem;
+    }
+
+    .card {
+      background: rgba(6, 10, 25, 0.88);
+      border: 1px solid rgba(134, 210, 255, 0.16);
+      border-radius: 26px;
+      padding: 1.6rem;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    .image-box {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 2px solid rgba(134, 210, 255, 0.25);
+      padding: 5px;
+      background: linear-gradient(145deg, rgba(134,210,255,0.16), rgba(12,18,45,0.75));
+      margin-bottom: 1.2rem;
+      animation: pulseGlow 3.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 0 rgba(134, 210, 255, 0); }
+      to { box-shadow: 0 0 28px rgba(134, 210, 255, 0.16); }
+    }
+
+    .image-box img {
+      width: 100%;
+      display: block;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .card h2 {
+      margin-bottom: 0.8rem;
+      font-size: 1.3rem;
+      color: var(--accent-strong);
+    }
+
+    .card p {
+      line-height: 1.75;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .button-wrapper {
+      text-align: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2rem;
+      border-radius: 999px;
+      background: linear-gradient(120deg, #7be0ff, #62a2ff);
+      color: #081323;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.24s ease, box-shadow 0.24s ease;
+      box-shadow: 0 18px 40px rgba(98, 162, 255, 0.24);
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 48px rgba(98, 162, 255, 0.34);
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      color: rgba(224, 234, 255, 0.68);
+      letter-spacing: 0.02em;
+      font-size: 0.94rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Purler Instrument Craft</h1>
+    <p class="intro">A magical introduction appears as soon as you open the page, guiding you through the beautiful materials and careful design that make a purler instrument both enchanting and durable. Each element celebrates craftsmanship, resonance, and a glowing visual harmony.</p>
+    <div class="materials">
+      <div class="card">
+        <div class="image-box">
+          <img src="https://images.unsplash.com/photo-1517511620798-cec17d428bc0?auto=format&fit=crop&w=800&q=80" alt="Beautiful hardwood materials" />
+        </div>
+        <h2>Hardwood Frame</h2>
+        <p>Purler instruments start with solid hardwood such as maple, walnut, or oak. These woods give the body warmth, strength, and a natural resonance that enhances every note.</p>
+      </div>
+      <div class="card">
+        <div class="image-box">
+          <img src="https://images.unsplash.com/photo-1518384401464-9bdd3adc247c?auto=format&fit=crop&w=800&q=80" alt="Metal accents and fittings" />
+        </div>
+        <h2>Metal Fittings</h2>
+        <p>Precision metal parts, often brass or copper, add detail and stability. These polished fittings keep the instrument tuned and provide a luminous accent to the handcrafted wood structure.</p>
+      </div>
+      <div class="card">
+        <div class="image-box">
+          <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80" alt="Glass beads and artful finishes" />
+        </div>
+        <h2>Artful Beads & Finishes</h2>
+        <p>Glass or crystal beads and smooth fiber accents bring sparkle and tactile beauty. Each element is placed carefully so the instrument feels magical in the hand and visually refined.</p>
+      </div>
+    </div>
+    <div class="button-wrapper">
+      <a class="button" href="purler8.html">Continue to Purler 8</a>
+    </div>
+    <p class="footer-note">The perfect purler page blends enchantment, material mastery, and a bright invitation to explore the next chapter.</p>
+  </div>
+</body>
+</html>

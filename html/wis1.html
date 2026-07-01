@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Maze Runner</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #2a3f76 0%, #081026 30%, #020511 100%),
+                  radial-gradient(circle at bottom right, rgba(94, 224, 255, 0.08) 0%, transparent 34%);
+      color: #eef2ff;
+      font-family: system-ui, sans-serif;
+    }
+    #game { display: block; filter: drop-shadow(0 0 32px rgba(138, 240, 255, 0.24)); }
+    #info {
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      z-index: 10;
+      background: rgba(8, 16, 40, 0.84);
+      color: #edf5ff;
+      padding: 16px 22px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      max-width: 360px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">Click to start. Use the mouse to guide the glowing orb to the goal. Avoid the walls.</div>
+  <canvas id="game"></canvas>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const info = document.getElementById('info');
+
+    const maze = [
+      "###############",
+      "#S............#",
+      "###.###.###...G",
+      "#...#.....#...#",
+      "#.#.#####.#.#.#",
+      "#.#.....#.#.#.#",
+      "#.#####.#.#.#.#",
+      "#.......#.....#",
+      "###############"
+    ];
+
+    let width = 0;
+    let height = 0;
+    let cellSize = 0;
+    let offsetX = 0;
+    let offsetY = 0;
+    const walls = [];
+    let start = null;
+    let goal = null;
+    let startCell = null;
+    let goalCell = null;
+    const path = [];
+    const stars = [];
+    const trails = [];
+
+    const player = { x: 0, y: 0, r: 0, vx: 0, vy: 0, speed: 2.4, active: false };
+    const pointer = { x: 0, y: 0 };
+    let message = "Click to start. Use the mouse to guide the glowing orb.";
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+
+      cellSize = Math.min(width / maze[0].length, height / maze.length);
+      offsetX = (width - maze[0].length * cellSize) / 2;
+      offsetY = (height - maze.length * cellSize) / 2;
+      player.r = cellSize * 0.24;
+
+      buildMaze();
+      buildStars();
+      reset();
+    }
+
+    function buildMaze() {
+      walls.length = 0;
+      path.length = 0;
+      start = null;
+      goal = null;
+      startCell = null;
+      goalCell = null;
+
+      for (let row = 0; row < maze.length; row++) {
+        for (let col = 0; col < maze[row].length; col++) {
+          const cell = maze[row][col];
+          const x = offsetX + col * cellSize;
+          const y = offsetY + row * cellSize;
+
+          if (cell === "#") {
+            walls.push({ x, y, w: cellSize, h: cellSize });
+          } else if (cell === "S") {
+            start = { x: x + cellSize / 2, y: y + cellSize / 2 };
+            startCell = { row, col };
+          } else if (cell === "G") {
+            goal = { x: x + cellSize * 0.18, y: y + cellSize * 0.18, w: cellSize * 0.64, h: cellSize * 0.64 };
+            goalCell = { row, col };
+          }
+        }
+      }
+
+      if (startCell && goalCell) {
+        computePath();
+      }
+    }
+
+    function buildStars() {
+      stars.length = 0;
+      for (let i = 0; i < 90; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 1.4 + 0.6,
+          alpha: Math.random() * 0.5 + 0.3
+        });
+      }
+    }
+
+    function computePath() {
+      path.length = 0;
+      const rows = maze.length;
+      const cols = maze[0].length;
+      const queue = [];
+      const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+      const prev = Array.from({ length: rows }, () => Array(cols).fill(null));
+
+      queue.push(startCell);
+      visited[startCell.row][startCell.col] = true;
+
+      while (queue.length) {
+        const { row, col } = queue.shift();
+        if (row === goalCell.row && col === goalCell.col) break;
+
+        [
+          { row: row - 1, col },
+          { row: row + 1, col },
+          { row, col: col - 1 },
+          { row, col: col + 1 }
+        ].forEach(neighbor => {
+          if (
+            neighbor.row >= 0 &&
+            neighbor.row < rows &&
+            neighbor.col >= 0 &&
+            neighbor.col < cols &&
+            !visited[neighbor.row][neighbor.col] &&
+            maze[neighbor.row][neighbor.col] !== "#"
+          ) {
+            visited[neighbor.row][neighbor.col] = true;
+            prev[neighbor.row][neighbor.col] = { row, col };
+            queue.push(neighbor);
+          }
+        });
+      }
+
+      let current = goalCell;
+      while (current) {
+        path.push({ row: current.row, col: current.col });
+        current = prev[current.row][current.col];
+      }
+      path.reverse();
+    }
+
+    function reset() {
+      if (!start) return;
+      player.x = start.x;
+      player.y = start.y;
+      player.vx = 0;
+      player.vy = 0;
+      player.active = false;
+      message = "Click to start. Use the mouse to guide the glowing orb.";
+    }
+
+    function createTrail() {
+      if (!player.active) return;
+      trails.push({
+        x: player.x - player.vx * 4,
+        y: player.y - player.vy * 4,
+        r: player.r * 0.55 + Math.random() * 2,
+        alpha: 0.36
+      });
+      if (trails.length > 45) trails.shift();
+    }
+
+    function startGame() {
+      if (!player.active) {
+        player.active = true;
+        pointer.x = player.x;
+        pointer.y = player.y;
+        message = "Go to the green goal without touching walls.";
+      }
+    }
+
+    function update() {
+      if (!player.active) return;
+
+      const dx = pointer.x - player.x;
+      const dy = pointer.y - player.y;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist > 4) {
+        player.vx = dx / dist;
+        player.vy = dy / dist;
+      }
+
+      player.x += player.vx * player.speed;
+      player.y += player.vy * player.speed;
+      createTrail();
+
+      if (checkCollision()) {
+        message = "Collision! Restarting...";
+        player.active = false;
+        setTimeout(reset, 300);
+      } else if (checkGoal()) {
+        message = "Goal reached! Click to play again.";
+        player.active = false;
+      }
+    }
+
+    function checkCollision() {
+      if (
+        player.x - player.r < offsetX + 1 ||
+        player.x + player.r > offsetX + maze[0].length * cellSize - 1 ||
+        player.y - player.r < offsetY + 1 ||
+        player.y + player.r > offsetY + maze.length * cellSize - 1
+      ) {
+        return true;
+      }
+
+      for (const wall of walls) {
+        if (circleRectCollision(player, wall)) return true;
+      }
+      return false;
+    }
+
+    function checkGoal() {
+      return goal &&
+        player.x > goal.x &&
+        player.x < goal.x + goal.w &&
+        player.y > goal.y &&
+        player.y < goal.y + goal.h;
+    }
+
+    function circleRectCollision(circle, rect) {
+      const nearestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.w));
+      const nearestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.h));
+      const dx = circle.x - nearestX;
+      const dy = circle.y - nearestY;
+      return dx * dx + dy * dy < circle.r * circle.r;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      const bgGradient = ctx.createRadialGradient(width * 0.2, height * 0.15, width * 0.04, width * 0.2, height * 0.15, width);
+      bgGradient.addColorStop(0, "#1c2d5e");
+      bgGradient.addColorStop(0.35, "#08122d");
+      bgGradient.addColorStop(1, "#020714");
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.globalCompositeOperation = "lighter";
+      for (const star of stars) {
+        ctx.globalAlpha = star.alpha;
+        ctx.fillStyle = "#b8e7ff";
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = trails.length - 1; i >= 0; i--) {
+        const trail = trails[i];
+        ctx.globalAlpha = trail.alpha;
+        ctx.fillStyle = "#8af0ff";
+        ctx.beginPath();
+        ctx.arc(trail.x, trail.y, trail.r, 0, Math.PI * 2);
+        ctx.fill();
+        trail.alpha *= 0.92;
+        if (trail.alpha < 0.05) trails.splice(i, 1);
+      }
+
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = "rgba(15, 34, 77, 0.98)";
+      ctx.fillRect(offsetX, offsetY, maze[0].length * cellSize, maze.length * cellSize);
+
+      ctx.strokeStyle = "rgba(255,255,255,0.08)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= maze[0].length; i++) {
+        const x = offsetX + i * cellSize;
+        ctx.beginPath();
+        ctx.moveTo(x, offsetY);
+        ctx.lineTo(x, offsetY + maze.length * cellSize);
+        ctx.stroke();
+      }
+      for (let i = 0; i <= maze.length; i++) {
+        const y = offsetY + i * cellSize;
+        ctx.beginPath();
+        ctx.moveTo(offsetX, y);
+        ctx.lineTo(offsetX + maze[0].length * cellSize, y);
+        ctx.stroke();
+      }
+
+      if (path.length) {
+        const pathGradient = ctx.createLinearGradient(offsetX, offsetY, offsetX + maze[0].length * cellSize, offsetY + maze.length * cellSize);
+        pathGradient.addColorStop(0, "#9b5fff");
+        pathGradient.addColorStop(0.5, "#5ee0ff");
+        pathGradient.addColorStop(1, "#ffe17a");
+        ctx.fillStyle = pathGradient;
+        ctx.globalAlpha = 0.28;
+        for (const cell of path) {
+          ctx.fillRect(
+            offsetX + cell.col * cellSize + cellSize * 0.14,
+            offsetY + cell.row * cellSize + cellSize * 0.14,
+            cellSize * 0.72,
+            cellSize * 0.72
+          );
+        }
+        ctx.globalAlpha = 1;
+
+        ctx.strokeStyle = "rgba(181, 255, 241, 0.85)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        path.forEach((cell, index) => {
+          const cx = offsetX + cell.col * cellSize + cellSize / 2;
+          const cy = offsetY + cell.row * cellSize + cellSize / 2;
+          if (index === 0) ctx.moveTo(cx, cy);
+          else ctx.lineTo(cx, cy);
+        });
+        ctx.stroke();
+      }
+
+      for (const wall of walls) {
+        const wallGradient = ctx.createLinearGradient(wall.x, wall.y, wall.x + wall.w, wall.y + wall.h);
+        wallGradient.addColorStop(0, "#162451");
+        wallGradient.addColorStop(1, "#0f1d3a");
+        ctx.fillStyle = wallGradient;
+        ctx.fillRect(wall.x + 2, wall.y + 2, wall.w - 4, wall.h - 4);
+        ctx.strokeStyle = "#3d537d";
+        ctx.strokeRect(wall.x + 2, wall.y + 2, wall.w - 4, wall.h - 4);
+      }
+
+      if (goal) {
+        const goalGradient = ctx.createRadialGradient(
+          goal.x + goal.w / 2,
+          goal.y + goal.h / 2,
+          goal.w * 0.1,
+          goal.x + goal.w / 2,
+          goal.y + goal.h / 2,
+          goal.w * 0.6
+        );
+        goalGradient.addColorStop(0, "#9effd1");
+        goalGradient.addColorStop(0.5, "#6f8dff");
+        goalGradient.addColorStop(1, "#fbe56f");
+        ctx.save();
+        ctx.shadowColor = "rgba(111, 141, 255, 0.75)";
+        ctx.shadowBlur = 20;
+        ctx.fillStyle = goalGradient;
+        ctx.fillRect(goal.x, goal.y, goal.w, goal.h);
+        ctx.restore();
+        ctx.strokeStyle = "#d2fcff";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(goal.x, goal.y, goal.w, goal.h);
+      }
+
+      ctx.save();
+      ctx.shadowColor = "rgba(138, 240, 255, 0.55)";
+      ctx.shadowBlur = 24;
+      const playerGradient = ctx.createRadialGradient(player.x, player.y, player.r * 0.2, player.x, player.y, player.r * 1.4);
+      playerGradient.addColorStop(0, "#d0ffff");
+      playerGradient.addColorStop(0.4, "#8af0ff");
+      playerGradient.addColorStop(1, "rgba(120, 220, 255, 0.07)");
+      ctx.fillStyle = playerGradient;
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, player.r * 1.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#f2daf0";
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255, 217, 131, 0.95)";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.fillStyle = "#ffffffdd";
+      ctx.font = "18px system-ui";
+      ctx.fillText(message, 20, 45);
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener('mousemove', e => {
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+    });
+
+    window.addEventListener('click', () => {
+      if (!player.active) startGame();
+    });
+
+    window.addEventListener('resize', resize);
+    resize();
+    loop();
+  </script>
+</body>
+</html>

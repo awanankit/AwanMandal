@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purler9 - Magical Fruits & Veggies</title>
+  <style>
+    :root {
+      --deep: #050814;
+      --violet: #6f4ed2;
+      --electric: #17c8ff;
+      --starlight: #a267ff;
+      --accent: #f4f8ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #eef7ff;
+      background: radial-gradient(circle at top left, rgba(23,200,255,0.15), transparent 18%),
+                  radial-gradient(circle at bottom right, rgba(162,103,255,0.22), transparent 20%),
+                  linear-gradient(135deg, #03050c 0%, #08122f 45%, #13084d 100%);
+      overflow-x: hidden;
+    }
+
+    .magic-stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.25), transparent 12%),
+                  radial-gradient(circle at 80% 10%, rgba(165,126,255,0.2), transparent 12%),
+                  radial-gradient(circle at 50% 80%, rgba(23,200,255,0.14), transparent 16%);
+      z-index: 0;
+    }
+
+    .welcome-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(3, 5, 20, 0.95);
+      z-index: 10;
+      animation: fadeOut 1s ease 9s forwards;
+    }
+
+    .welcome-card {
+      text-align: center;
+      padding: 3rem 2.5rem;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 32px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .welcome-card h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      color: #e9e9ff;
+    }
+
+    .welcome-card p {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #cdd6ff;
+      max-width: 34rem;
+      margin: 0 auto;
+    }
+
+    .welcome-card .sparkle {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.85rem 1.4rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(111,78,210,0.95), rgba(23,200,255,0.9));
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      box-shadow: 0 18px 40px rgba(18, 59, 132, 0.35);
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 4rem 2rem 1.5rem;
+      text-align: center;
+    }
+
+    header h2 {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.08em;
+      color: #f6f5ff;
+    }
+
+    header p {
+      max-width: 46rem;
+      margin: 0 auto;
+      color: #d5d9ff;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.75rem;
+      padding: 2.5rem;
+      max-width: 1180px;
+      margin: 0 auto 3rem;
+      z-index: 1;
+      position: relative;
+    }
+
+    .card {
+      background: rgba(12, 18, 42, 0.92);
+      border: 1px solid rgba(123, 82, 255, 0.18);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.2);
+      transition: transform 0.35s ease, border-color 0.35s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(23, 200, 255, 0.35);
+    }
+
+    .card-hero {
+      position: relative;
+      padding: 2.5rem 1.6rem 1.5rem;
+      display: grid;
+      place-items: center;
+      min-height: 240px;
+    }
+
+    .card-hero svg {
+      width: 110px;
+      height: 110px;
+      filter: drop-shadow(0 0 18px rgba(111,78,210,0.45));
+    }
+
+    .card h3 {
+      margin: 0 1.4rem 0.95rem;
+      font-size: 1.45rem;
+      color: #f8f8ff;
+      text-align: center;
+    }
+
+    .card p {
+      padding: 0 1.6rem 1.6rem;
+      color: #c8d1ff;
+      line-height: 1.75;
+      font-size: 0.98rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 1.6rem 1rem;
+      padding: 0.55rem 0.95rem;
+      border-radius: 999px;
+      background: rgba(23, 200, 255, 0.12);
+      color: #b8d8ff;
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+    }
+
+    .scene {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.95;
+    }
+
+    .bubble {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(111,78,210,0.92), rgba(23,200,255,0.65));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 12px 35px rgba(23,200,255,0.24);
+      animation: drift 6s ease-in-out infinite;
+    }
+
+    .bubble:nth-child(2) {
+      width: 70px;
+      height: 70px;
+      animation-duration: 5.2s;
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(111,78,210,0.55));
+    }
+
+    .bubble span {
+      color: #050814;
+      font-size: 2.5rem;
+      transform: translateY(-2px);
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-14px) scale(1.05); }
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem 1rem 2rem;
+      color: #a7b7e7;
+      font-size: 0.95rem;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      .welcome-card {
+        width: min(100%, 94vw);
+        padding: 2rem 1.4rem;
+      }
+
+      header {
+        padding-top: 3rem;
+      }
+
+      .cards {
+        padding: 1.5rem 1rem 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="magic-stars"></div>
+  <div class="welcome-screen">
+    <div class="welcome-card">
+      <h1>Welcome to Purler9</h1>
+      <p>Step into a magical world of fruits, veggies and adorable puler-inspired animation. Enjoy the cute colorful scene as your page blooms with cosmic blue, violet and starlit energy.</p>
+      <div class="sparkle">Stay enchanted</div>
+    </div>
+  </div>
+
+  <header>
+    <h2>Fruit & Veggie Magic for Pulers</h2>
+    <p>Discover beautiful fruits and vegetables that inspire puler bead designs, patterns, and cartoon animation. Every detail blends black, blue and violet with a dreamy glow perfect for a playful creative experience.</p>
+  </header>
+
+  <main class="cards">
+    <article class="card">
+      <div class="card-hero">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="60" cy="60" r="40" fill="#ffe56d" />
+          <path d="M42 44c6-10 24-14 28-4" stroke="#c15719" stroke-width="6" fill="none" stroke-linecap="round" />
+          <circle cx="50" cy="58" r="5" fill="#ff9b1f" />
+          <circle cx="70" cy="58" r="5" fill="#ff9b1f" />
+          <circle cx="60" cy="72" r="6" fill="#fff" opacity="0.7" />
+        </svg>
+      </div>
+      <h3>Sunny Mango</h3>
+      <div class="badge">Fruit / Pulser color</div>
+      <p>Mango adds golden warmth with sweet orange and glowing yellow. In pulers, it is used for cheerful patterns and soft animation highlights that feel friendly and bright.</p>
+    </article>
+
+    <article class="card">
+      <div class="card-hero">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M60 20c-22 0-36 18-36 40s14 40 36 40 36-18 36-40-14-40-36-40z" fill="#7eed79" />
+          <path d="M56 18c0-6 14-6 14 0v16" stroke="#2f8c3a" stroke-width="5" stroke-linecap="round" />
+          <circle cx="48" cy="66" r="5" fill="#57b459" />
+          <circle cx="72" cy="62" r="6" fill="#5ed06b" />
+        </svg>
+      </div>
+      <h3>Lovely Avocado</h3>
+      <div class="badge">Veggie / Soft glow</div>
+      <p>Avocado brings lush greens and creamy texture to puler designs. Its gentle color palette is perfect for magical background gradients and organic cartoon shapes.</p>
+    </article>
+
+    <article class="card">
+      <div class="card-hero">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="60" cy="58" r="42" fill="#915aff" />
+          <path d="M52 40c2-8 16-8 18 0" stroke="#d9b7ff" stroke-width="6" stroke-linecap="round" />
+          <path d="M38 64c6 8 18 14 34 12" stroke="#b38fff" stroke-width="6" fill="none" stroke-linecap="round" />
+          <circle cx="50" cy="72" r="6" fill="#fff" opacity="0.9" />
+        </svg>
+      </div>
+      <h3>Violet Berry</h3>
+      <div class="badge">Fruit / Sparkle</div>
+      <p>Violet berries glow with mysterious sweetness. They are ideal for cute 4K cartoon accents, creating sparkle effects in puler animations and fanciful page details.</p>
+    </article>
+
+    <article class="card">
+      <div class="card-hero">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M60 22c-18 0-26 8-36 18-10 10-6 28 8 38s34 10 48 0 18-28 8-38c-10-10-18-18-28-18z" fill="#6ea1ff" />
+          <circle cx="46" cy="62" r="6" fill="#fff" opacity="0.9" />
+          <circle cx="74" cy="64" r="6" fill="#fff" opacity="0.9" />
+          <path d="M60 80c-10 0-14-5-18-12" stroke="#2c5ad9" stroke-width="5" stroke-linecap="round" />
+        </svg>
+      </div>
+      <h3>Blueberry Dream</h3>
+      <div class="badge">Fruit / Deep tone</div>
+      <p>Blueberry dream uses deep blue-violet tones that match the puler theme perfectly. It fits crisp, futuristic cartoon backgrounds and magical pulser bead art.</p>
+    </article>
+  </main>
+
+  <div class="scene">
+    <div class="bubble"><span>🍓</span></div>
+    <div class="bubble"><span>🍇</span></div>
+  </div>
+
+  <footer>
+    Designed with magical black, blue, and violet hues to bring cute puler fruit and veggie stories to life.
+  </footer>
+</body>
+</html>

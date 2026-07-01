@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parkour Obby</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #070b18;
+      color: #e3f0ff;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    #overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(5, 8, 20, 0.75);
+      backdrop-filter: blur(8px);
+      text-align: center;
+      gap: 12px;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    #overlay.hidden {
+      display: none;
+    }
+
+    #overlay h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 4vw, 3rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #overlay p {
+      max-width: 640px;
+      margin: 0;
+      line-height: 1.5;
+      color: #cbdcff;
+    }
+
+    #startButton {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #6ea8ff, #3b82f6);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #startButton:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.35);
+    }
+
+    #hud {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 5;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .hud-panel {
+      background: rgba(5, 10, 22, 0.72);
+      border: 1px solid rgba(130, 180, 255, 0.16);
+      border-radius: 16px;
+      padding: 14px 18px;
+      min-width: 180px;
+    }
+
+    .hud-panel strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #a8d5ff;
+    }
+
+    .hint {
+      font-size: 0.92rem;
+      color: #b1c8ff;
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <h1>Parkour Obby</h1>
+    <p>Brace yourself for a dangerous parkour challenge. Click the button to lock your mouse, use WASD to move, SPACE to jump, and survive the glowing hazards while reaching the ring to advance.</p>
+    <button id="startButton" type="button">Start Game</button>
+    <p>Only the button starts this deadly run.</p>
+  </div>
+
+  <div id="hud">
+    <div class="hud-panel"><strong id="levelText">Level 1 / 100</strong><span id="statusText">Ready to run</span></div>
+    <div class="hud-panel"><strong>Controls</strong><span class="hint">WASD - move, MOUSE - look, SPACE - jump</span></div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.151.3/build/three.module.js';
+    import { PointerLockControls } from 'https://cdn.jsdelivr.net/npm/three@0.151.3/examples/jsm/controls/PointerLockControls.js';
+
+    const overlay = document.getElementById('overlay');
+    const statusText = document.getElementById('statusText');
+    const levelText = document.getElementById('levelText');
+    const startButton = document.getElementById('startButton');
+
+    let camera, scene, renderer, controls;
+    let moveForward = false;
+    let moveBackward = false;
+    let moveLeft = false;
+    let moveRight = false;
+    let canJump = false;
+    let velocity = new THREE.Vector3();
+    let direction = new THREE.Vector3();
+    let raycaster;
+    let platforms = [];
+    let hazards = [];
+    let terrainGroup;
+    let hazardGroup;
+    let goalMesh;
+    let currentLevel = 1;
+    const totalLevels = 100;
+    const spawnPoint = new THREE.Vector3(0, 2.2, 0);
+    const goalDistance = 2.2;
+    let prevTime = performance.now();
+    let gameStarted = false;
+
+    init();
+
+    function init() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a132a);
+      scene.fog = new THREE.Fog(0x0a132a, 10, 120);
+
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      document.body.appendChild(renderer.domElement);
+
+      const ambient = new THREE.HemisphereLight(0xd0e1ff, 0x102040, 0.75);
+      scene.add(ambient);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.1);
+      dirLight.position.set(15, 30, 25);
+      dirLight.castShadow = true;
+      dirLight.shadow.camera.top = 30;
+      dirLight.shadow.camera.bottom = -30;
+      dirLight.shadow.camera.left = -30;
+      dirLight.shadow.camera.right = 30;
+      dirLight.shadow.mapSize.set(2048, 2048);
+      scene.add(dirLight);
+
+      const skyGeometry = new THREE.SphereGeometry(180, 32, 32);
+      const skyMaterial = new THREE.MeshBasicMaterial({ color: 0x091a33, side: THREE.BackSide });
+      const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+      scene.add(sky);
+
+      const floorTexture = new THREE.TextureLoader().load('https://cdn.jsdelivr.net/gh/mrdoob/three.js@r151/examples/textures/terrain/grasslight-big.jpg');
+      floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+      floorTexture.repeat.set(20, 20);
+
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(500, 500),
+        new THREE.MeshStandardMaterial({ map: floorTexture, roughness: 0.9, metalness: 0.1, color: 0x1b293f })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = -0.5;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      terrainGroup = new THREE.Group();
+      scene.add(terrainGroup);
+
+      hazardGroup = new THREE.Group();
+      scene.add(hazardGroup);
+
+      raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 2.5);
+
+      controls = new PointerLockControls(camera, document.body);
+      scene.add(controls.getObject());
+
+      startButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        startGame();
+      });
+
+      document.addEventListener('pointerlockerror', () => {
+        statusText.textContent = 'Pointer lock failed. Click again to start.';
+      });
+
+      controls.addEventListener('lock', () => {
+        overlay.classList.add('hidden');
+        statusText.textContent = 'Run through the ring to advance.';
+        if (!gameStarted) {
+          gameStarted = true;
+          animate();
+        }
+      });
+
+      controls.addEventListener('unlock', () => {
+        overlay.classList.remove('hidden');
+        statusText.textContent = 'Click to resume.';
+      });
+
+      document.addEventListener('keydown', onKeyDown);
+      document.addEventListener('keyup', onKeyUp);
+      window.addEventListener('resize', onWindowResize);
+
+      buildLevel(currentLevel);
+    }
+
+    function startGame() {
+      if (!controls.isLocked) {
+        controls.lock();
+      }
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onKeyDown(event) {
+      switch (event.code) {
+        case 'ArrowUp':
+        case 'KeyW':
+          moveForward = true;
+          break;
+        case 'ArrowLeft':
+        case 'KeyA':
+          moveLeft = true;
+          break;
+        case 'ArrowDown':
+        case 'KeyS':
+          moveBackward = true;
+          break;
+        case 'ArrowRight':
+        case 'KeyD':
+          moveRight = true;
+          break;
+        case 'Space':
+          if (canJump === true) {
+            velocity.y = 8.5;
+            canJump = false;
+          }
+          break;
+      }
+    }
+
+    function onKeyUp(event) {
+      switch (event.code) {
+        case 'ArrowUp':
+        case 'KeyW':
+          moveForward = false;
+          break;
+        case 'ArrowLeft':
+        case 'KeyA':
+          moveLeft = false;
+          break;
+        case 'ArrowDown':
+        case 'KeyS':
+          moveBackward = false;
+          break;
+        case 'ArrowRight':
+        case 'KeyD':
+          moveRight = false;
+          break;
+      }
+    }
+
+    function buildLevel(levelNumber) {
+      while (terrainGroup.children.length > 0) {
+        terrainGroup.remove(terrainGroup.children[0]);
+      }
+      while (hazardGroup.children.length > 0) {
+        hazardGroup.remove(hazardGroup.children[0]);
+      }
+      platforms.length = 0;
+      hazards.length = 0;
+      if (goalMesh) {
+        scene.remove(goalMesh);
+        goalMesh = null;
+      }
+
+      const platformData = createLevelData(levelNumber);
+      platformData.forEach(item => {
+        const material = new THREE.MeshStandardMaterial({
+          color: item.color,
+          roughness: 0.55,
+          metalness: 0.15,
+          emissive: new THREE.Color(item.color).multiplyScalar(0.06)
+        });
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(item.width, item.height, item.depth), material);
+        mesh.position.set(item.x, item.y, item.z);
+        mesh.receiveShadow = true;
+        mesh.castShadow = true;
+        platforms.push(mesh);
+        terrainGroup.add(mesh);
+      });
+
+      const hazardCount = Math.min(3 + Math.floor(levelNumber / 10), 6);
+      for (let i = 0; i < hazardCount; i++) {
+        const source = platformData[Math.floor(Math.random() * Math.max(1, platformData.length - 1)) + 1];
+        const hazard = new THREE.Mesh(
+          new THREE.BoxGeometry(1.25, 0.6, 1.25),
+          new THREE.MeshStandardMaterial({
+            color: 0xff3d3d,
+            emissive: 0xff1d1d,
+            emissiveIntensity: 0.8,
+            roughness: 0.3,
+            metalness: 0.1
+          })
+        );
+        hazard.position.set(
+          source.x + (Math.random() - 0.5) * Math.min(2.2, source.width * 0.4),
+          source.y + 0.65,
+          source.z + (Math.random() - 0.5) * Math.min(1.8, source.depth * 0.4)
+        );
+        hazard.castShadow = true;
+        hazard.receiveShadow = true;
+        hazards.push(hazard);
+        hazardGroup.add(hazard);
+      }
+
+      const last = platformData[platformData.length - 1];
+      goalMesh = createGoalRing();
+      goalMesh.position.set(last.x, last.y + 1.2, last.z);
+      scene.add(goalMesh);
+
+      controls.getObject().position.copy(spawnPoint);
+      velocity.set(0, 0, 0);
+      canJump = false;
+      levelText.textContent = `Level ${currentLevel} / ${totalLevels}`;
+    }
+
+    function createLevelData(level) {
+      const items = [];
+      const count = Math.min(10 + Math.floor(level * 0.9), 30);
+      let x = 0;
+      let z = -5;
+      for (let i = 0; i < count; i++) {
+        const width = 1.8 + Math.random() * 2.8;
+        const depth = 2.2 + Math.random() * 3.3;
+        const y = 1 + i * 1.8 + Math.sin(i * 0.55) * 0.4;
+        x += (Math.random() * 2 - 1) * Math.min(4.6, 1.6 + level * 0.04);
+        z -= depth + 5.4 + Math.random() * 4.4;
+        const hue = 0.60 - Math.min(0.4, i * 0.01);
+        items.push({ x, y, z, width, height: 0.9, depth, color: new THREE.Color().setHSL(hue, 0.70, 0.45) });
+      }
+      items.unshift({ x: 0, y: 0.8, z: 0, width: 6, height: 0.9, depth: 6, color: 0x627d9d });
+      return items;
+    }
+
+    function createGoalRing() {
+      const ring = new THREE.Group();
+      const outer = new THREE.Mesh(
+        new THREE.TorusGeometry(1.2, 0.18, 16, 80),
+        new THREE.MeshStandardMaterial({ color: 0xffed72, emissive: 0xffd76f, emissiveIntensity: 0.9, roughness: 0.3 })
+      );
+      outer.rotation.x = Math.PI / 2;
+      ring.add(outer);
+      const inner = new THREE.Mesh(
+        new THREE.TorusGeometry(0.8, 0.12, 12, 64),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffe6, emissiveIntensity: 0.7, roughness: 0.2 })
+      );
+      inner.rotation.x = Math.PI / 2;
+      ring.add(inner);
+      return ring;
+    }
+
+    function resetToSpawn() {
+      controls.getObject().position.copy(spawnPoint);
+      velocity.set(0, 0, 0);
+      canJump = false;
+      statusText.textContent = 'Hazard hit! Resetting to the start.';
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const time = performance.now();
+      const delta = (time - prevTime) / 1000;
+      prevTime = time;
+
+      if (controls.isLocked === true) {
+        raycaster.ray.origin.copy(controls.getObject().position);
+        raycaster.ray.origin.y -= 1.5;
+
+        const intersections = raycaster.intersectObjects(platforms, false);
+        const onObject = intersections.length > 0;
+
+        velocity.x -= velocity.x * 9.0 * delta;
+        velocity.z -= velocity.z * 9.0 * delta;
+        velocity.y -= 20.0 * delta;
+
+        direction.z = Number(moveForward) - Number(moveBackward);
+        direction.x = Number(moveRight) - Number(moveLeft);
+        direction.normalize();
+
+        if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+
+        if (onObject) {
+          velocity.y = Math.max(0, velocity.y);
+          canJump = true;
+        }
+
+        controls.moveRight(-velocity.x * delta);
+        controls.moveForward(-velocity.z * delta);
+
+        controls.getObject().position.y += velocity.y * delta;
+
+        if (controls.getObject().position.y < -20) {
+          resetToSpawn();
+        }
+
+        if (onObject) {
+          controls.getObject().position.y = Math.max(controls.getObject().position.y, intersections[0].point.y + 1.5);
+        }
+
+        const playerPos = controls.getObject().position;
+        const hazardHit = hazards.some(hazard => {
+          const dx = playerPos.x - hazard.position.x;
+          const dz = playerPos.z - hazard.position.z;
+          return Math.abs(dx) < 0.7 && Math.abs(dz) < 0.7 && playerPos.y < hazard.position.y + 0.8 && playerPos.y > hazard.position.y - 0.2;
+        });
+
+        if (hazardHit) {
+          resetToSpawn();
+        }
+
+        if (goalMesh && controls.getObject().position.distanceTo(goalMesh.position) < goalDistance) {
+          currentLevel = Math.min(totalLevels, currentLevel + 1);
+          levelText.textContent = `Level ${currentLevel} / ${totalLevels}`;
+          statusText.textContent = 'Level complete! Loading next run...';
+          buildLevel(currentLevel);
+        }
+      }
+
+      goalMesh?.rotation.set(time * 0.001, time * 0.0015, 0);
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+</html>
