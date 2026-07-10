@@ -6,4 +6,4 @@ for i in range(50):
     t.circle(i * 5)
     t.right(45)
 
-turtle.done()
+turtle.done() rtuiyutyt

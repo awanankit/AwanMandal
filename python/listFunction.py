@@ -6,5 +6,4 @@ for i in range(num):
 maxNumber=max(numbers)
 numbers.remove(maxNumber)
 print(numbers)
-
-
+            
