@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Color Drift — a small beautiful game</title>
+	<style>
+		html,body{height:100%;margin:0;background:#0b1020;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial}
+		#game{display:block;margin:0 auto;background:linear-gradient(180deg,#081022 0%,#071829 60%,#001b2f 100%);box-shadow:0 10px 30px rgba(0,0,0,.6);border-radius:12px}
+		.ui{color:#cfe8ff;text-align:center;margin-top:12px}
+		button{background:#16a085;color:#fff;border:0;padding:8px 14px;border-radius:8px;cursor:pointer}
+	</style>
+</head>
+<body>
+	<canvas id="game" width="800" height="520"></canvas>
+	<div class="ui">
+		<div id="score">Score: 0</div>
+		<button id="restart">Restart</button>
+	</div>
+
+	<script>
+	const canvas = document.getElementById('game');
+	const ctx = canvas.getContext('2d');
+	const W = canvas.width, H = canvas.height;
+
+	// Player: a drifting orb that changes color
+	const player = {x:100,y:H/2,r:16,vy:0,gravity:0.7, lift:-12, hue:200};
+	let pipes = [];
+	let frame = 0, score = 0, speed = 2.2, running = true;
+
+	function rand(min,max){return Math.random()*(max-min)+min}
+
+	function spawn(){
+		const gap = rand(120,180);
+		const cy = rand(120,H-120);
+		pipes.push({x:W+40, cy, gap, w:56, hue: Math.floor(rand(0,360))});
+	}
+
+	function reset(){pipes=[];frame=0;score=0;player.y=H/2;player.vy=0;player.hue=200;speed=2.2;running=true;spawn();}
+
+	function update(){
+		if(!running) return;
+		frame++;
+		if(frame%105===0) spawn();
+		player.vy += player.gravity; player.y += player.vy;
+		player.hue = (player.hue + 0.6) % 360;
+		// bounds
+		if(player.y+player.r>H){player.y=H-player.r; player.vy=0; running=false}
+		if(player.y-player.r<0){player.y=player.r; player.vy=0}
+
+		// pipes move
+		for(let i=pipes.length-1;i>=0;i--){
+			const p=pipes[i]; p.x -= speed;
+			// score when passed
+			if(!p.passed && p.x + p.w < player.x - player.r){ p.passed=true; score++; document.getElementById('score').textContent = 'Score: '+score; speed += 0.03; }
+			// collision
+			if(collidePipe(player,p)) running=false;
+			if(p.x + p.w < -20) pipes.splice(i,1);
+		}
+	}
+
+	function collidePipe(pl, p){
+		// top rect
+		const top = {x:p.x, y:0, w:p.w, h:p.cy - p.gap/2};
+		const bot = {x:p.x, y:p.cy + p.gap/2, w:p.w, h:H - (p.cy + p.gap/2)};
+		return circleRect(pl, top) || circleRect(pl, bot);
+	}
+
+	function circleRect(c, r){
+		const rx = Math.max(r.x, Math.min(c.x, r.x + r.w));
+		const ry = Math.max(r.y, Math.min(c.y, r.y + r.h));
+		const dx = c.x - rx, dy = c.y - ry;
+		return (dx*dx + dy*dy) < (c.r*c.r);
+	}
+
+	function draw(){
+		// background gradient + subtle stars
+		const g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#071127'); g.addColorStop(1,'#001b2f');
+		ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+		// twinkling stars
+		for(let i=0;i<60;i++){ ctx.fillStyle = 'rgba(255,255,255,'+ (Math.abs(Math.sin((frame+i)/30))*0.7).toFixed(2) +')'; ctx.fillRect((i*37)%W, (i*23)%H, 1,1); }
+
+		// pipes
+		pipes.forEach(p=>{
+			ctx.fillStyle = 'hsl('+p.hue+',80%,45%)';
+			// top
+			ctx.fillRect(p.x,0,p.w,p.cy - p.gap/2);
+			// bottom
+			ctx.fillRect(p.x,p.cy + p.gap/2,p.w,H);
+			// rim
+			ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth=2; ctx.strokeRect(p.x-1,0,p.w+2,p.cy - p.gap/2+1);
+		});
+
+		// player glow
+		const rad = ctx.createRadialGradient(player.x,player.y,2,player.x,player.y,80);
+		rad.addColorStop(0,'hsla('+player.hue+',100%,65%,1)'); rad.addColorStop(1,'hsla('+player.hue+',100%,40%,0)');
+		ctx.fillStyle = rad; ctx.beginPath(); ctx.arc(player.x,player.y,50,0,Math.PI*2); ctx.fill();
+		// orb
+		ctx.beginPath(); ctx.arc(player.x,player.y,player.r,0,Math.PI*2); ctx.fillStyle = 'hsl('+player.hue+',85%,60%)'; ctx.fill();
+		ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.stroke();
+
+		if(!running){ ctx.fillStyle='rgba(0,0,0,0.45)'; ctx.fillRect(0,0,W,H); ctx.fillStyle='#fff'; ctx.font='36px system-ui'; ctx.textAlign='center'; ctx.fillText('Game Over',W/2,H/2-12); ctx.font='18px system-ui'; ctx.fillText('Score: '+score,W/2,H/2+26); }
+	}
+
+	function loop(){ update(); draw(); requestAnimationFrame(loop); }
+
+	// input
+	window.addEventListener('keydown', e=>{ if(e.code==='Space') flap(); });
+	window.addEventListener('mousedown', flap);
+	function flap(){ if(!running) return; player.vy = player.lift; }
+	document.getElementById('restart').addEventListener('click', ()=>{ reset(); document.getElementById('score').textContent='Score: 0'; });
+
+	// start
+	reset(); loop();
+	</script>
+</body>
+</html...>
+l;;/;;;
+;'4'>

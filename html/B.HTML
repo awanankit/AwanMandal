@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Starlight Catcher</title>
+	<style>
+		:root{--bg:#0b1020;--panel:#0f1724;--accent:#7ee3ff}
+		html,body{height:100%;margin:0;background:radial-gradient(ellipse at 10% 10%,#122033 0%,transparent 40%),var(--bg);font-family:Inter,Segoe UI,Roboto,Helvetica,Arial}
+		.wrap{height:100%;display:flex;align-items:center;justify-content:center}
+		.card{width:920px;max-width:95%;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:14px;padding:18px;box-shadow:0 8px 40px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03);}
+		header{display:flex;align-items:center;gap:12px;color:#e6f7ff;margin-bottom:8px}
+		header h1{font-size:20px;margin:0}
+		#game{background:linear-gradient(180deg,#061226 0%,#071722 100%);border-radius:10px;padding:12px;display:flex;gap:12px}
+		canvas{background:transparent;border-radius:8px;display:block}
+		.sidebar{width:220px;color:#cfeffb}
+		.score{font-size:18px;margin-bottom:8px}
+		.controls{margin-top:12px}
+		button{background:linear-gradient(90deg,var(--accent),#6fd7b8);border:none;padding:8px 12px;border-radius:8px;color:#042233;font-weight:700;cursor:pointer}
+		.footer{color:#7da7b6;font-size:12px;margin-top:10px}
+		.center{flex:1;display:flex;flex-direction:column;align-items:center}
+		.hint{color:#8fb6c9;font-size:13px;margin-top:6px}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="card">
+			<header>
+				<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l1.9 4.7L19 8l-3.6 3 1 5L12 14.8 7.6 16l1-5L5 8l5.1-1.3L12 2z" fill="#7ee3ff"/></svg>
+				<h1>Starlight Catcher</h1>
+			</header>
+			<div id="game">
+				<div class="center">
+					<canvas id="c" width="640" height="360"></canvas>
+					<div class="hint">Move mouse to aim • Click to shoot • Catch falling stars</div>
+				</div>
+				<aside class="sidebar">
+					<div class="score">Score: <span id="score">0</span></div>
+					<div>Lives: <span id="lives">5</span></div>
+					<div class="controls">
+						<button id="start">Start</button>
+						<button id="reset">Reset</button>
+					</div>
+					<div class="footer">Fast, responsive, and pretty. Built for demo.</div>
+				</aside>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const canvas = document.getElementById('c');
+		const ctx = canvas.getContext('2d');
+		const scoreEl = document.getElementById('score');
+		const livesEl = document.getElementById('lives');
+		const startBtn = document.getElementById('start');
+		const resetBtn = document.getElementById('reset');
+
+		let W = canvas.width, H = canvas.height;
+		let stars = [];
+		let bullets = [];
+		let mx = W/2, my = H/2;
+		let score = 0, lives = 5, running = false, spawnTimer = 0;
+
+		function rand(min,max){return Math.random()*(max-min)+min}
+
+		function spawnStar(){
+			stars.push({x:rand(20,W-20),y:-10,r:rand(6,14),vy:rand(0.6,1.6),angle:rand(0,Math.PI*2),va:rand(-0.02,0.02)})
+		}
+
+		function fire(){
+			const angle = Math.atan2(my - (H-30), mx - (W/2));
+			bullets.push({x:W/2,y:H-30,vx:Math.cos(angle)*6,vy:Math.sin(angle)*6,r:4});
+		}
+
+		canvas.addEventListener('mousemove', e=>{
+			const rect = canvas.getBoundingClientRect(); mx = e.clientX-rect.left; my = e.clientY-rect.top;
+		});
+		canvas.addEventListener('click', ()=>{ if(running) fire(); });
+		startBtn.addEventListener('click', ()=>{ if(!running){running=true;score=0;lives=5;stars=[];bullets=[];} });
+		resetBtn.addEventListener('click', ()=>{running=false;score=0;lives=5;stars=[];bullets=[];updateHUD(); });
+
+		function updateHUD(){ scoreEl.textContent = score; livesEl.textContent = lives }
+
+		function update(){
+			if(!running) return drawIdle();
+			spawnTimer += 1/60;
+			if(spawnTimer > Math.max(0.3,1 - score*0.02)){ spawnStar(); spawnTimer=0; }
+
+			// update stars
+			for(let i=stars.length-1;i>=0;i--){
+				const s = stars[i]; s.y += s.vy; s.angle += s.va; if(s.y - s.r > H){ stars.splice(i,1); lives--; if(lives<=0){running=false;} }
+			}
+			// update bullets
+			for(let i=bullets.length-1;i>=0;i--){
+				const b = bullets[i]; b.x += b.vx; b.y += b.vy; if(b.x< -10 || b.x>W+10 || b.y< -10 || b.y>H+10) bullets.splice(i,1);
+			}
+
+			// collisions
+			for(let i=stars.length-1;i>=0;i--){
+				for(let j=bullets.length-1;j>=0;j--){
+					const s=stars[i], b=bullets[j]; const dx=s.x-b.x, dy=s.y-b.y; if(dx*dx+dy*dy < (s.r+b.r)*(s.r+b.r)){
+						stars.splice(i,1); bullets.splice(j,1); score += Math.round(10 + s.r*2); break;
+					}
+				}
+			}
+
+			updateHUD();
+		}
+
+		function drawIdle(){
+			ctx.clearRect(0,0,W,H);
+			drawScene();
+			ctx.save(); ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.fillRect(0,0,W,H); ctx.restore();
+		}
+
+		function drawScene(){
+			ctx.clearRect(0,0,W,H);
+			// background gradient
+			const g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#08131e'); g.addColorStop(1,'#021018'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+
+			// stars
+			for(const s of stars){
+				ctx.save(); ctx.translate(s.x,s.y); ctx.rotate(s.angle);
+				const grad = ctx.createRadialGradient(0,0,s.r*0.2,0,0,s.r); grad.addColorStop(0,'#ffffff'); grad.addColorStop(0.5,'#7ee3ff'); grad.addColorStop(1,'rgba(126,227,255,0.05)');
+				ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0,0,s.r,0,Math.PI*2); ctx.fill(); ctx.restore();
+			}
+
+			// bullets
+			for(const b of bullets){ ctx.fillStyle = '#a8fff2'; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill(); }
+
+			// catcher (at bottom center)
+			ctx.save(); ctx.translate(W/2,H-30);
+			// aim line
+			ctx.strokeStyle = 'rgba(126,227,255,0.25)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(mx-W/2,my-(H-30)); ctx.stroke();
+			ctx.fillStyle = '#0ff7ea'; ctx.beginPath(); ctx.arc(0,0,18,0,Math.PI*2); ctx.fill(); ctx.restore();
+
+			// HUD small
+			ctx.fillStyle='rgba(255,255,255,0.035)'; ctx.fillRect(8,8,120,40);
+		}
+
+		function loop(){ update(); drawScene(); requestAnimationFrame(loop); }
+		loop();
+
+		// responsive canvas
+		window.addEventListener('resize', ()=>{
+			const rect = canvas.getBoundingClientRect(); // keep logical size
+		});
+
+		// small initial stars
+		for(let i=0;i<6;i++) spawnStar();
+		updateHUD();
+	</script>
+</body>
+</html>

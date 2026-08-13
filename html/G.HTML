@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Beautiful Particle Pop - Game</title>
+	<style>
+		html,body{height:100%;margin:0;background:linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+		.wrap{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff}
+		canvas{border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.5);background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));}
+		.hud{margin-top:18px;display:flex;gap:12px;align-items:center}
+		.btn{background:rgba(255,255,255,.06);padding:8px 12px;border-radius:10px;color:#fff;border:1px solid rgba(255,255,255,.06);cursor:pointer}
+		.score{font-weight:700;font-size:18px}
+		.sub{opacity:.8;font-size:13px}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<canvas id="c" width="900" height="560"></canvas>
+		<div class="hud">
+			<div class="score">Score: <span id="score">0</span></div>
+			<button class="btn" id="restart">Restart</button>
+			<div class="sub">Click or tap the colorful particles to pop them. Combo gives bonus!</div>
+		</div>
+	</div>
+
+	<script>
+		const canvas = document.getElementById('c');
+		const ctx = canvas.getContext('2d');
+		const W = canvas.width, H = canvas.height;
+		let particles = [];
+		let score = 0;
+		let combo = 0;
+
+		function rand(a,b){return a + Math.random()*(b-a)}
+		function hsl(h,s,l){return `hsl(${h},${s}%,${l}%)`}
+
+		class Particle{
+			constructor(x,y,r,h,vy,vx){
+				this.x=x;this.y=y;this.r=r;this.h=h;this.vy=vy;this.vx=vx;this.alpha=1;this.popped=false;this.created=Date.now();
+			}
+			update(dt){
+				this.x += this.vx*dt;
+				this.y += this.vy*dt;
+				this.vy += 80*dt; // gravity
+				if(this.y>H+this.r) this.y = -this.r, this.x = rand(0,W);
+				if(this.popped) this.alpha -= 0.02; 
+			}
+			draw(){
+				ctx.beginPath();
+				const grd = ctx.createRadialGradient(this.x - this.r*0.3, this.y - this.r*0.3, this.r*0.1, this.x, this.y, this.r);
+				grd.addColorStop(0, `rgba(255,255,255,${0.8*this.alpha})`);
+				grd.addColorStop(1, `hsla(${this.h},90%,55%,${0.9*this.alpha})`);
+				ctx.fillStyle = grd;
+				ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+				ctx.fill();
+				// glow
+				ctx.shadowColor = hsl(this.h,90,60);
+				ctx.shadowBlur = 20 * this.alpha;
+				ctx.fill();
+				ctx.shadowBlur = 0;
+			}
+		}
+
+		function spawn(n=1){
+			for(let i=0;i<n;i++){
+				const r = rand(8,36);
+				const x = rand(r, W-r);
+				const y = rand(-60, H*0.4);
+				const h = rand(0,360);
+				const vy = rand(10,60);
+				const vx = rand(-20,20);
+				particles.push(new Particle(x,y,r,h,vy,vx));
+			}
+		}
+
+		// initial
+		spawn(28);
+
+		let last = performance.now();
+		function loop(t){
+			const dt = Math.min(1/30,(t-last)/1000);
+			last = t;
+			ctx.clearRect(0,0,W,H);
+			// subtle background stars
+			for(let i=0;i<6;i++){
+				ctx.fillStyle = `rgba(255,255,255,${0.02 + 0.02*Math.sin(t/500 + i)})`;
+				ctx.fillRect((i*73 + t*0.01)%W, (i*121 + t*0.03)%H, 2,2);
+			}
+
+			for(let p of particles){
+				p.update(dt);
+				p.draw();
+			}
+			particles = particles.filter(p=>p.alpha>0.02);
+			// spawn gradually
+			if(particles.length < 24) spawn(1);
+
+			requestAnimationFrame(loop);
+		}
+		requestAnimationFrame(loop);
+
+		// interactions
+		function popAt(x,y){
+			let popped = 0;
+			for(let p of particles){
+				if(p.popped) continue;
+				const dx = p.x-x, dy = p.y-y;
+				if(dx*dx+dy*dy <= p.r*p.r){
+					p.popped = true; p.vx = rand(-200,200); p.vy = rand(-300,-50); p.alpha = 1; p.h = (p.h+rand(30,150))%360;
+					popped++;
+				}
+			}
+			if(popped){
+				combo = combo + 1;
+				const gain = popped * (10 + Math.floor(combo/3));
+				score += gain;
+				document.getElementById('score').textContent = score;
+			} else {
+				combo = 0;
+			}
+		}
+
+		canvas.addEventListener('pointerdown', (e)=>{
+			const rect = canvas.getBoundingClientRect();
+			const x = (e.clientX - rect.left) * (canvas.width/rect.width);
+			const y = (e.clientY - rect.top) * (canvas.height/rect.height);
+			popAt(x,y);
+		});
+
+		document.getElementById('restart').addEventListener('click', ()=>{
+			particles = [];
+			score = 0; combo = 0;
+			document.getElementById('score').textContent = 0;
+			spawn(28);
+		});
+	</script>
+</body>
+</html>

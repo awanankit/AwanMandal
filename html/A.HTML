@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Star Catcher</title>
+<style>
+  :root {
+    color-scheme: dark;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Inter, system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top, rgba(118, 215, 255, 0.18), transparent 30%),
+      linear-gradient(135deg, #020926 0%, #081f3f 42%, #0b1944 100%);
+    color: #eef5ff;
+    overflow: hidden;
+  }
+  .container {
+    width: min(100%, 1080px);
+    padding: 22px;
+  }
+  .card {
+    width: 100%;
+    padding: 28px;
+    border-radius: 32px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+  .hero {
+    display: grid;
+    gap: 16px;
+    justify-items: center;
+    text-align: center;
+  }
+  .hero h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .hero p {
+    margin: 0;
+    max-width: 640px;
+    color: rgba(238, 245, 255, 0.78);
+    line-height: 1.7;
+  }
+  .score-board {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 22px 0;
+  }
+  .score-box {
+    padding: 16px 18px;
+    border-radius: 24px;
+    background: rgba(12, 30, 74, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+  .score-box span {
+    display: block;
+    font-size: 0.92rem;
+    color: rgba(238, 245, 255, 0.7);
+  }
+  .score-box strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 2rem;
+    color: #e5f9ff;
+  }
+  .arena {
+    position: relative;
+    width: 100%;
+    min-height: 420px;
+    border-radius: 30px;
+    overflow: hidden;
+    background: radial-gradient(circle at 20% 20%, rgba(143, 207, 255, 0.16), transparent 25%),
+      linear-gradient(180deg, #081b36 0%, #020726 100%);
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.35);
+  }
+  .arena::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 40% 16%, rgba(255, 255, 255, 0.14) 0, transparent 22%),
+      radial-gradient(circle at 85% 50%, rgba(155, 225, 255, 0.08) 0, transparent 18%);
+    pointer-events: none;
+  }
+  .target,
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .target {
+    width: 70px;
+    height: 70px;
+    border: 3px solid rgba(255, 255, 255, 0.86);
+    background: radial-gradient(circle at 35% 35%, rgba(162, 244, 255, 0.98), rgba(8, 138, 234, 0.18) 58%);
+    box-shadow: 0 0 48px rgba(88, 205, 255, 0.38);
+    animation: pulse 1.4s ease-in-out infinite;
+    cursor: pointer;
+  }
+  .orb {
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle at 30% 30%, #88d3ff, #0f3d7f 75%);
+    box-shadow: 0 0 28px rgba(94, 210, 255, 0.35);
+  }
+  .controls {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+  button {
+    border: 0;
+    border-radius: 999px;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #55d6ff, #1a54d8);
+    box-shadow: 0 18px 40px rgba(9, 75, 145, 0.22);
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+  button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+  }
+  .hint {
+    margin-top: 20px;
+    font-size: 0.95rem;
+    color: rgba(238, 245, 255, 0.7);
+    text-align: center;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.18); }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="hero">
+        <h1>Star Catcher</h1>
+        <p>Tap the glowing target before it fades. Each successful click increases speed and fills the arena with more light.</p>
+      </div>
+      <div class="score-board">
+        <div class="score-box">
+          <span>Current Score</span>
+          <strong id="score">0</strong>
+        </div>
+        <div class="score-box">
+          <span>Best Score</span>
+          <strong id="best">0</strong>
+        </div>
+      </div>
+      <div class="arena" id="arena">
+        <div class="target" id="target"></div>
+        <div class="orb" id="orb"></div>
+      </div>
+      <div class="controls">
+        <button id="startButton">Start</button>
+        <button id="resetButton">Reset</button>
+      </div>
+      <p class="hint">Click the target as fast as you can. The target jumps to a new location after every hit.</p>
+    </div>
+  </div>
+  <script>
+    const arena = document.getElementById('arena');
+    const target = document.getElementById('target');
+    const orb = document.getElementById('orb');
+    const scoreEl = document.getElementById('score');
+    const bestEl = document.getElementById('best');
+    const startButton = document.getElementById('startButton');
+    const resetButton = document.getElementById('resetButton');
+
+    let score = 0;
+    let best = 0;
+    let timeout = 1500;
+    let timer;
+    let active = false;
+
+    function getBounds(size) {
+      const rect = arena.getBoundingClientRect();
+      return {
+        x: Math.max(40, Math.random() * (rect.width - size - 40)),
+        y: Math.max(40, Math.random() * (rect.height - size - 40))
+      };
+    }
+
+    function updatePositions() {
+      const targetPos = getBounds(70);
+      target.style.left = `${targetPos.x}px`;
+      target.style.top = `${targetPos.y}px`;
+      const orbPos = getBounds(30);
+      orb.style.left = `${orbPos.x}px`;
+      orb.style.top = `${orbPos.y}px`;
+    }
+
+    function refreshScore() {
+      scoreEl.textContent = score;
+      bestEl.textContent = best;
+    }
+
+    function endGame() {
+      active = false;
+      clearTimeout(timer);
+      startButton.textContent = 'Start';
+      target.style.opacity = '0.3';
+      orb.style.opacity = '0.3';
+    }
+
+    function playRound() {
+      if (!active) return;
+      updatePositions();
+      timer = setTimeout(() => {
+        if (!active) return;
+        score = 0;
+        refreshScore();
+        endGame();
+      }, timeout);
+    }
+
+    target.addEventListener('click', () => {
+      if (!active) return;
+      score += 1;
+      best = Math.max(best, score);
+      refreshScore();
+      timeout = Math.max(420, timeout - 70);
+      clearTimeout(timer);
+      playRound();
+    });
+
+    startButton.addEventListener('click', () => {
+      if (!active) {
+        active = true;
+        score = 0;
+        timeout = 1500;
+        startButton.textContent = 'Stop';
+        refreshScore();
+        playRound();
+      } else {
+        endGame();
+      }
+    });
+
+    resetButton.addEventListener('click', () => {
+      score = 0;
+      timeout = 1500;
+      refreshScore();
+      endGame();
+    });
+
+    window.addEventListener('resize', () => {
+      if (active) {
+        updatePositions();
+      }
+    });
+
+    updatePositions();
+  </script>
+</body>
+</html>

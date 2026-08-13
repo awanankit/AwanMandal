@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Bloom — a tiny beautiful click game</title>
+	<style>
+		:root{--bg:#0f1724;--card:#0b1220;--accent:#7c5cff}
+		*{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,-apple-system,Arial}
+		html,body{height:100%;margin:0;background:radial-gradient(ellipse at 10% 10%,#142033 0%,transparent 30%),var(--bg);color:#e6eef8}
+		.wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:32px}
+		.card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.04);backdrop-filter:blur(6px);padding:20px;border-radius:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+		h1{margin:0;font-weight:600;letter-spacing:-0.02em}
+		p.lead{margin:6px 0 0;color:#b9c5df}
+		#game{width:720px;max-width:92vw;height:420px;background:linear-gradient(180deg,#071226 0%,#051018 100%);border-radius:10px;position:relative;overflow:hidden;border:1px solid rgba(124,92,255,0.08)}
+		.hud{display:flex;gap:12px;position:absolute;top:12px;left:12px;z-index:20}
+		.badge{background:rgba(10,14,22,0.6);padding:8px 12px;border-radius:999px;color:#cfe0ff;font-weight:600;font-size:14px;border:1px solid rgba(255,255,255,0.03)}
+		canvas{display:block}
+		.controls{display:flex;gap:8px;align-items:center}
+		button{background:linear-gradient(90deg,var(--accent),#55d1ff);border:0;padding:8px 12px;border-radius:8px;color:#041026;font-weight:700;cursor:pointer}
+		.footer{display:flex;gap:8px;align-items:center;color:#8ea6d6;font-size:13px}
+		.center{display:flex;align-items:center;justify-content:center;height:100%}
+		.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:30}
+		.big{font-size:48px;margin:6px 0}
+		.small{color:#acc3ff}
+		/* particle style */
+		.dot{position:absolute;border-radius:50%;pointer-events:none}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="card" style="width:min(760px,96vw)">
+			<h1>Bloom</h1>
+			<p class="lead">Click the glowing blooms to score. Chains give multipliers. Beautiful particles.</p>
+			<div id="game" class="card" role="application">
+				<div class="hud">
+					<div class="badge">Score: <span id="score">0</span></div>
+					<div class="badge">Multiplier: x<span id="multi">1</span></div>
+				</div>
+				<div class="overlay" id="overlay" style="display:flex">
+					<div class="center" style="flex-direction:column">
+						<div class="big" id="title">Bloom</div>
+						<div class="small">Click to start</div>
+					</div>
+				</div>
+				<canvas id="c"></canvas>
+			</div>
+			<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+				<div class="footer">Tip: aim for streaky chain clicks</div>
+				<div class="controls"><button id="reset">Reset</button></div>
+			</div>
+		</div>
+	</div>
+	<script>
+		const canvas = document.getElementById('c');
+		const game = document.getElementById('game');
+		const overlay = document.getElementById('overlay');
+		const scoreEl = document.getElementById('score');
+		const multiEl = document.getElementById('multi');
+		const resetBtn = document.getElementById('reset');
+		let W,H,ctx;
+		function resize(){W=canvas.width=game.clientWidth;H=canvas.height=game.clientHeight;canvas.style.width=W+'px';canvas.style.height=H+'px'}
+		window.addEventListener('resize',resize);
+		ctx=canvas.getContext('2d');resize();
+
+		// game state
+		let blooms=[];
+		let particles=[];
+		let score=0;let streak=0;let multi=1;let running=false;
+
+		function rand(min,max){return Math.random()*(max-min)+min}
+		function hue(){return Math.floor(rand(160,300))}
+
+		function spawnBloom(){
+			const r=rand(18,42);
+			const x=rand(r,W-r);const y=rand(r,H-r);
+			const s={x,y,r,age:0,life:120,h:hue(),pulse:rand(0.8,1.2)};
+			blooms.push(s);
+		}
+
+		function popBloom(i){
+			const b=blooms[i];
+			blooms.splice(i,1);
+			const gained=Math.floor(10*b.r*multi);
+			score+=gained;scoreEl.textContent=score;
+			streak++;multi=1+Math.floor(streak/3);multiEl.textContent=multi;
+			// spawn particles
+			for(let k=0;k<18;k++)particles.push({x:b.x,y:b.y,vx:Math.cos(k/18*Math.PI*2)*rand(1,6),vy:Math.sin(k/18*Math.PI*2)*rand(1,6),life:rand(40,90),col:`hsl(${b.h},80%,65%)`,r:rand(2,6)});
+		}
+
+		function reset(){score=0;streak=0;multi=1;scoreEl.textContent=score;multiEl.textContent=multi;blooms=[];particles=[];overlay.style.display='flex';running=false}
+		resetBtn.addEventListener('click',reset);
+
+		game.addEventListener('click',e=>{
+			const rect=canvas.getBoundingClientRect();
+			const x=e.clientX-rect.left,y=e.clientY-rect.top;
+			if(!running){running=true;overlay.style.display='none';spawnBloom();spawnBloom();spawnBloom();}
+			// check blooms
+			for(let i=blooms.length-1;i>=0;i--){const b=blooms[i];const d=Math.hypot(x-b.x,y-b.y);if(d<b.r*1.1){popBloom(i);return}}
+			// miss
+			streak=0;multi=1;multiEl.textContent=multi;
+		});
+
+		// main loop
+		let tick=0;
+		function loop(){tick++;ctx.clearRect(0,0,W,H);
+			// occasionally spawn
+			if(running && Math.random()<0.02)spawnBloom();
+			// draw blooms
+			for(let i=blooms.length-1;i>=0;i--){const b=blooms[i];b.age++;const p=(Math.sin(b.age*0.08*b.pulse)+1)/2;const rr=b.r*(0.85+0.25*p);
+				// glow
+				const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,rr*3);
+				g.addColorStop(0,`hsla(${b.h},90%,65%,0.25)`);
+				g.addColorStop(1,'rgba(4,8,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(b.x,b.y,rr*3,0,Math.PI*2);ctx.fill();
+				// petal circle
+				ctx.beginPath();ctx.fillStyle=`hsl(${b.h},75% ,65%)`;ctx.arc(b.x,b.y,rr,0,Math.PI*2);ctx.fill();
+				// outline
+				ctx.lineWidth=2;ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.beginPath();ctx.arc(b.x,b.y,rr,0,Math.PI*2);ctx.stroke();
+				if(b.age>b.life)blooms.splice(i,1);
+			}
+			// particles
+			for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life--;p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;ctx.globalAlpha=Math.max(0,p.life/100);
+				ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1; if(p.life<0)particles.splice(i,1);
+			}
+			requestAnimationFrame(loop);
+		}
+		loop();
+		// start with a gentle spawn
+		for(let i=0;i<4;i++)spawnBloom();
+	</script>
+</body>
+</html>
