@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#10132b">
+	<title>Luma Garden — A Little Light Game</title>
+	<style>
+		:root { color-scheme: dark; --ink:#f8f5ff; --muted:#aaa9c7; --panel:rgba(28,29,61,.82); --line:rgba(255,255,255,.12); --gold:#ffd879; }
+		* { box-sizing:border-box; }
+		body { margin:0; min-height:100vh; color:var(--ink); font-family:ui-rounded,"Segoe UI",system-ui,sans-serif; background:radial-gradient(ellipse at 50% 0%,#383567 0,#1b1c3b 42%,#10132b 100%); }
+		body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.55; background-image:radial-gradient(2px 2px at 12% 22%,#fff 45%,transparent 55%),radial-gradient(1px 1px at 77% 14%,#fff 45%,transparent 55%),radial-gradient(2px 2px at 87% 63%,#ffe7a5 45%,transparent 55%),radial-gradient(1px 1px at 24% 74%,#fff 45%,transparent 55%),radial-gradient(2px 2px at 56% 45%,#fff 45%,transparent 55%),radial-gradient(1px 1px at 39% 11%,#fff 45%,transparent 55%),radial-gradient(1px 1px at 8% 55%,#ffe7a5 45%,transparent 55%); }
+		.page { width:min(100% - 32px,760px); margin:auto; padding:38px 0 32px; }
+		header { text-align:center; margin-bottom:24px; }
+		.eyebrow { color:#d7c9ff; font-size:.75rem; letter-spacing:.22em; text-transform:uppercase; }
+		h1 { margin:7px 0 6px; font-size:clamp(2.3rem,7vw,3.8rem); line-height:1; letter-spacing:-.055em; }
+		h1 span { color:var(--gold); text-shadow:0 0 28px #ffcb66aa; }
+		.intro { max-width:440px; margin:11px auto 0; color:var(--muted); font-size:.97rem; line-height:1.55; }
+		.game-shell { position:relative; padding:clamp(16px,4vw,28px); border:1px solid var(--line); border-radius:26px; background:var(--panel); box-shadow:0 22px 70px #07081770,inset 0 1px #ffffff12; backdrop-filter:blur(16px); }
+		.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+		.stat { padding:10px 6px; text-align:center; border:1px solid var(--line); background:#ffffff08; border-radius:15px; }
+		.stat-label { display:block; color:var(--muted); font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; }
+		.stat-value { display:block; margin-top:2px; font-size:1.25rem; font-weight:750; font-variant-numeric:tabular-nums; }
+		.board { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(8px,2vw,14px); max-width:520px; margin:auto; perspective:900px; }
+		.card { position:relative; aspect-ratio:1; border:0; padding:0; background:transparent; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+		.card-inner { position:absolute; inset:0; transform-style:preserve-3d; transition:transform .42s cubic-bezier(.2,.75,.25,1); }
+		.card.is-open .card-inner,.card.is-matched .card-inner { transform:rotateY(180deg); }
+		.face { position:absolute; inset:0; display:grid; place-items:center; border-radius:18px; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+		.back { border:1px solid #a99cff55; background:linear-gradient(145deg,#39366e,#242650); box-shadow:inset 0 1px #ffffff1b,0 5px 14px #08091f55; transition:box-shadow .2s,border-color .2s,transform .2s; }
+		.card:hover:not(:disabled) .back { border-color:#dacaff; box-shadow:0 0 20px #a18aff55,inset 0 1px #ffffff30; transform:translateY(-2px); }
+		.back::before { content:"✦"; color:#c7baff; font-size:clamp(1.1rem,4vw,1.8rem); text-shadow:0 0 12px #b39bff; }
+		.front { transform:rotateY(180deg); border:1px solid #ffffff45; background:radial-gradient(circle at 50% 38%,#ffffff24,transparent 55%),linear-gradient(145deg,#393866,#222442); box-shadow:inset 0 0 22px #ffffff10; font-size:clamp(2rem,8vw,3.5rem); text-shadow:0 0 18px currentColor; }
+		.card.is-matched .front { border-color:#ffe49b; box-shadow:0 0 22px #ffd87988,inset 0 0 18px #ffe7a533; animation:glow 1.7s ease-in-out infinite alternate; }
+		.card:disabled { cursor:default; }
+		.card:focus-visible { outline:3px solid var(--gold); outline-offset:3px; border-radius:18px; }
+		@keyframes glow { to { box-shadow:0 0 30px #ffd879bb,inset 0 0 25px #ffe7a566; } }
+		.message { min-height:28px; margin:17px 0 12px; text-align:center; color:#e7dcff; font-size:.92rem; }
+		.controls { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; }
+		.action { border:1px solid #ffffff24; border-radius:999px; padding:10px 17px; color:var(--ink); background:#ffffff0d; font:inherit; font-size:.88rem; font-weight:650; cursor:pointer; transition:.2s; }
+		.action:hover { background:#ffffff19; border-color:#ffffff55; transform:translateY(-1px); }
+		.action.primary { color:#29213a; border-color:transparent; background:linear-gradient(100deg,#ffe49c,#ffbd82); box-shadow:0 5px 18px #ffc87833; }
+		.action.primary:hover { filter:brightness(1.08); }
+		.hint { margin:16px 0 0; text-align:center; color:#8f90b3; font-size:.78rem; }
+		.win { position:absolute; inset:0; z-index:2; display:grid; place-items:center; padding:20px; border-radius:26px; background:#11132be8; backdrop-filter:blur(8px); text-align:center; animation:appear .3s ease both; }
+		.win[hidden] { display:none; }
+		.win-card { max-width:360px; }
+		.win-icon { font-size:3.5rem; filter:drop-shadow(0 0 18px #ffd879); }
+		.win h2 { margin:8px 0; font-size:2rem; }
+		.win p { color:var(--muted); line-height:1.55; }
+		.win .action { margin-top:10px; }
+		@keyframes appear { from { opacity:0; } to { opacity:1; } }
+		@media(max-width:420px) { .page { width:min(100% - 20px,760px); padding-top:25px; } .game-shell { border-radius:21px; padding:14px; } .face { border-radius:13px; } .back::before { font-size:1.1rem; } }
+		@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
+	</style>
+</head>
+<body>
+	<main class="page">
+		<header>
+			<div class="eyebrow">A cozy little matching game</div>
+			<h1>Luma <span>Garden</span></h1>
+			<p class="intro">Wake the garden lights. Find every matching pair of enchanted ornaments in as few moves as you can.</p>
+		</header>
+		<section class="game-shell" aria-label="Luma Garden memory game">
+			<div class="stats" aria-live="polite">
+				<div class="stat"><span class="stat-label">Moves</span><span class="stat-value" id="moves">0</span></div>
+				<div class="stat"><span class="stat-label">Pairs</span><span class="stat-value" id="pairs">0 / 8</span></div>
+				<div class="stat"><span class="stat-label">Time</span><span class="stat-value" id="timer">00:00</span></div>
+			</div>
+			<div class="board" id="board" aria-label="Ornament cards"></div>
+			<p class="message" id="message" role="status">Choose any two ornaments to reveal them.</p>
+			<div class="controls">
+				<button class="action primary" id="restart" type="button">↻ New garden</button>
+				<button class="action" id="hint" type="button">✦ Peek at pairs</button>
+			</div>
+			<p class="hint">Tip: remember each ornament's place. A quick peek can help!</p>
+			<div class="win" id="win" hidden>
+				<div class="win-card"><div class="win-icon" aria-hidden="true">🌟</div><h2>Garden glowing!</h2><p id="win-copy"></p><button class="action primary" id="play-again" type="button">Grow another garden</button></div>
+			</div>
+		</section>
+	</main>
+	<script>
+		(() => {
+			const ornaments = [
+				{ icon:'🌙', name:'moon' }, { icon:'🦋', name:'butterfly' },
+				{ icon:'🌸', name:'blossom' }, { icon:'🍄', name:'mushroom' },
+				{ icon:'💎', name:'crystal' }, { icon:'🪷', name:'lotus' },
+				{ icon:'⭐', name:'star' }, { icon:'🪄', name:'wand' }
+			];
+			const board = document.getElementById('board');
+			const movesEl = document.getElementById('moves');
+			const pairsEl = document.getElementById('pairs');
+			const timerEl = document.getElementById('timer');
+			const message = document.getElementById('message');
+			const win = document.getElementById('win');
+			let first = null, locked = false, moves = 0, found = 0, seconds = 0, clock = null, hinting = false;
+
+			function shuffled(items) {
+				const result = [...items];
+				for (let i = result.length - 1; i > 0; i--) {
+					const j = Math.floor(Math.random() * (i + 1));
+					[result[i], result[j]] = [result[j], result[i]];
+				}
+				return result;
+			}
+			function formatTime(value) {
+				return `${String(Math.floor(value / 60)).padStart(2,'0')}:${String(value % 60).padStart(2,'0')}`;
+			}
+			function startClock() {
+				if (!clock) clock = setInterval(() => { seconds++; timerEl.textContent = formatTime(seconds); }, 1000);
+			}
+			function makeCard(item, index) {
+				const button = document.createElement('button');
+				button.type = 'button'; button.className = 'card';
+				button.setAttribute('aria-label', `Hidden ornament ${index + 1}`);
+				button.innerHTML = `<span class="card-inner"><span class="face back" aria-hidden="true"></span><span class="face front" aria-hidden="true">${item.icon}</span></span>`;
+				button.addEventListener('click', () => reveal(button, item));
+				return button;
+			}
+			function reveal(card, item) {
+				if (locked || hinting || card.classList.contains('is-open') || card.classList.contains('is-matched')) return;
+				startClock(); card.classList.add('is-open'); card.setAttribute('aria-label', `${item.name} ornament`);
+				if (!first) { first = { card, item }; return; }
+				moves++; movesEl.textContent = moves;
+				const second = { card, item };
+				if (first.item.name === second.item.name) {
+					first.card.classList.add('is-matched'); second.card.classList.add('is-matched');
+					first.card.disabled = true; second.card.disabled = true; found++;
+					pairsEl.textContent = `${found} / ${ornaments.length}`;
+					message.textContent = ['A lovely match!','The garden is brighter!','You found a glowing pair!'][Math.floor(Math.random()*3)];
+					first = null;
+					if (found === ornaments.length) finish();
+				} else {
+					locked = true; message.textContent = 'Not a pair yet — try to remember those places.';
+					const previous = first; first = null;
+					setTimeout(() => {
+						previous.card.classList.remove('is-open'); card.classList.remove('is-open');
+						previous.card.setAttribute('aria-label','Hidden ornament'); card.setAttribute('aria-label','Hidden ornament'); locked = false;
+					}, 850);
+				}
+			}
+			function finish() {
+				clearInterval(clock);
+				message.textContent = 'Every ornament is shining!';
+				document.getElementById('win-copy').textContent = `You lit the whole garden in ${moves} moves and ${formatTime(seconds)}. Beautifully done!`;
+				win.hidden = false; document.getElementById('play-again').focus();
+			}
+			function peek() {
+				if (locked || hinting || found === ornaments.length) return;
+				startClock(); hinting = true;
+				const cards = [...board.children];
+				cards.forEach(card => { if (!card.classList.contains('is-matched')) card.classList.add('is-open'); });
+				message.textContent = 'Take a good look — the ornaments will hide again in a moment.';
+				setTimeout(() => {
+					cards.forEach(card => { if (!card.classList.contains('is-matched')) card.classList.remove('is-open'); });
+					hinting = false; message.textContent = 'Your turn: choose two ornaments.';
+				}, 1400);
+			}
+			function newGame() {
+				clearInterval(clock); clock = null; seconds = 0; moves = 0; found = 0;
+				first = null; locked = false; hinting = false;
+				timerEl.textContent = '00:00'; movesEl.textContent = '0'; pairsEl.textContent = `0 / ${ornaments.length}`;
+				message.textContent = 'Choose any two ornaments to reveal them.'; win.hidden = true;
+				board.replaceChildren(...shuffled([...ornaments,...ornaments]).map(makeCard));
+			}
+			document.getElementById('restart').addEventListener('click', newGame);
+			document.getElementById('hint').addEventListener('click', peek);
+			document.getElementById('play-again').addEventListener('click', newGame);
+			newGame();
+		})();
+	</script>
+</body>
+</html>

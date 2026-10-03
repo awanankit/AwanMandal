@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nanotic | Wonderful Game</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #111827, #0b1120);
+      color: #e5e7eb;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+    }
+
+    .card {
+      width: min(90vw, 900px);
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(15, 23, 42, 0.7);
+      padding: 40px 30px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 2px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      text-transform: uppercase;
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      line-height: 1.1;
+      color: #f8fafc;
+    }
+
+    .highlight {
+      display: inline-block;
+      background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .tagline {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: #cbd5e1;
+      margin: 18px auto 30px;
+      max-width: 600px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 15px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      color: white;
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.35);
+    }
+
+    .secondary {
+      background: rgba(15, 118, 110, 0.15);
+      color: #a7f3d0;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    .features {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .feature {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 16px;
+      padding: 18px 14px;
+      color: #dbeafe;
+    }
+
+    .feature strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: #f8fafc;
+    }
+
+    .game-panel {
+      margin-top: 28px;
+      padding: 18px 16px 12px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      color: #dbeafe;
+      font-size: 0.95rem;
+    }
+
+    .game-area {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.2), rgba(15, 23, 42, 0.9));
+      box-shadow: inset 0 0 18px rgba(59, 130, 246, 0.2);
+    }
+
+    .player {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #34d399, #22d3ee);
+      box-shadow: 0 0 18px rgba(74, 222, 128, 0.6);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      transition: left 0.12s ease, top 0.12s ease;
+    }
+
+    .target {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fbbf24, #fb7185);
+      box-shadow: 0 0 18px rgba(251, 191, 36, 0.7);
+      z-index: 1;
+      transition: left 0.2s ease, top 0.2s ease;
+    }
+
+    .game-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">New Adventure</div>
+    <h1>Nanotic <span class="highlight">Wonderful</span> Game</h1>
+    <p class="tagline">Step into a vibrant world of magic, speed, and imagination — built to thrill every player.</p>
+
+    <div class="buttons">
+      <button id="playButton" class="primary" type="button">Play Now</button>
+      <button id="exploreButton" class="secondary" type="button">Explore</button>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <strong>Epic</strong>
+        Stunning gameplay moments
+      </div>
+      <div class="feature">
+        <strong>Fast</strong>
+        Smooth, exciting action
+      </div>
+      <div class="feature">
+        <strong>Fun</strong>
+        Endless adventure energy
+      </div>
+    </div>
+
+    <div class="game-panel">
+      <div class="game-header">
+        <div>Catch the glowing orb</div>
+        <div id="scoreLabel">Score: 0</div>
+      </div>
+      <div id="gameArea" class="game-area" aria-label="Mini game area">
+        <div id="player" class="player"></div>
+        <div id="target" class="target"></div>
+      </div>
+      <div class="game-controls">
+        <button id="startButton" class="primary" type="button">Start Game</button>
+        <button id="resetButton" class="secondary" type="button">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const playButton = document.getElementById('playButton');
+    const exploreButton = document.getElementById('exploreButton');
+    const startButton = document.getElementById('startButton');
+    const resetButton = document.getElementById('resetButton');
+    const scoreLabel = document.getElementById('scoreLabel');
+    const gameArea = document.getElementById('gameArea');
+    const player = document.getElementById('player');
+    const target = document.getElementById('target');
+
+    let score = 0;
+    let playerX = 50;
+    let playerY = 50;
+    let targetX = 30;
+    let targetY = 30;
+    let gameRunning = false;
+    let targetTimer = null;
+
+    function updateScore() {
+      scoreLabel.textContent = 'Score: ' + score;
+    }
+
+    function updatePlayer() {
+      player.style.left = playerX + '%';
+      player.style.top = playerY + '%';
+    }
+
+    function moveTarget() {
+      const maxX = 84;
+      const maxY = 84;
+      targetX = Math.random() * maxX;
+      targetY = Math.random() * maxY;
+      target.style.left = targetX + '%';
+      target.style.top = targetY + '%';
+    }
+
+    function checkCollision() {
+      const playerLeft = playerX - 3;
+      const playerRight = playerX + 3;
+      const playerTop = playerY - 3;
+      const playerBottom = playerY + 3;
+
+      if (
+        targetX >= playerLeft &&
+        targetX <= playerRight &&
+        targetY >= playerTop &&
+        targetY <= playerBottom
+      ) {
+        score += 1;
+        updateScore();
+        moveTarget();
+      }
+    }
+
+    function setPlayerPosition(x, y) {
+      playerX = Math.min(92, Math.max(8, x));
+      playerY = Math.min(92, Math.max(8, y));
+      updatePlayer();
+      if (gameRunning) checkCollision();
+    }
+
+    function keyHandler(event) {
+      if (!gameRunning) return;
+      const step = 6;
+      const key = event.key.toLowerCase();
+
+      if (key === 'arrowleft' || key === 'a') setPlayerPosition(playerX - step, playerY);
+      if (key === 'arrowright' || key === 'd') setPlayerPosition(playerX + step, playerY);
+      if (key === 'arrowup' || key === 'w') setPlayerPosition(playerX, playerY - step);
+      if (key === 'arrowdown' || key === 's') setPlayerPosition(playerX, playerY + step);
+    }
+
+    function startGame() {
+      if (gameRunning) return;
+      gameRunning = true;
+      score = 0;
+      updateScore();
+      playerX = 50;
+      playerY = 50;
+      updatePlayer();
+      moveTarget();
+      playButton.textContent = 'Playing...';
+      startButton.textContent = 'Game On';
+      targetTimer = setInterval(moveTarget, 900);
+    }
+
+    function resetGame() {
+      gameRunning = false;
+      clearInterval(targetTimer);
+      score = 0;
+      updateScore();
+      playerX = 50;
+      playerY = 50;
+      updatePlayer();
+      moveTarget();
+      playButton.textContent = 'Play Now';
+      startButton.textContent = 'Start Game';
+    }
+
+    playButton.addEventListener('click', startGame);
+    startButton.addEventListener('click', startGame);
+    resetButton.addEventListener('click', resetGame);
+    exploreButton.addEventListener('click', function () {
+      alert('Adventure mode activated! Use arrow keys or WASD to chase the glowing orb.');
+    });
+    document.addEventListener('keydown', keyHandler);
+
+    updateScore();
+    updatePlayer();
+    moveTarget();
+  </script>
+</body>
+</html>
